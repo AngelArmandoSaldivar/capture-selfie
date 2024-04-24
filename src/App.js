@@ -326,9 +326,9 @@ const ImageCropper = () => {
             </>
           }    
           {/**PARA CAMBIO A CAMARA FRONTAL USAR: user   */}
-          {/**PARA CAMBIO A CAMARA TRASERA USAR: environment */}            
+          {/**PARA CAMBIO A CAMARA TRASERA USAR: environment */}
           <Webcam
-            videoConstraints={ dataSelfie.length > 2 ? {facingMode: "environment"} : {facingMode: "environment"}}
+            videoConstraints={ dataSelfie.length > 2 ? {facingMode: "user"} : {facingMode: "environment"}}
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
