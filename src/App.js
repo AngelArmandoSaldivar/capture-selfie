@@ -187,7 +187,7 @@ const ImageCropper = () => {
       .then((response) => response.text())
       .then((result) => {
         console.log("TOKEM: " + result);
-        setCarga(token);
+        setCarga("TOKEN DE ACCESO: " + token);
       })
       .catch((error) => console.error(error));
 
