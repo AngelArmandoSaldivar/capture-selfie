@@ -335,7 +335,7 @@ const ImageCropper = () => {
             //videoConstraints={ dataSelfie.length > 2 ? {facingMode: "user"} : {facingMode: "environment"}}
             videoConstraints={{
               //...videoConstraints,
-              facingMode: dataSelfie.length > 2 ? 'FACING_MODE_USER' : 'FACING_MODE_ENVIRONMENT'
+              facingMode: dataSelfie.length > 2 ? 'FACING_MODE_ENVIRONMENT' : 'FACING_MODE_ENVIRONMENT'
             }}
             audio={false}
             ref={webcamRef}
