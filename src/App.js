@@ -125,7 +125,7 @@ const ImageCropper = () => {
     setShow(!show);
     setShow2(!show2);
     if(show3 == true) {
-      dataSelfie.length > 0 ? dataSelfie = [] : 'Array seteado';
+      return dataSelfie.length > 0 ? dataSelfie = [] : '';
     }    
   }
 
