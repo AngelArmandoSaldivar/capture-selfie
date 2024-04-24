@@ -185,7 +185,10 @@ const ImageCropper = () => {
 
     fetch("https://veridocid.azure-api.net/api/auth/token", requestOptions)
       .then((response) => response.text())
-      .then((result) => console.log('TOKEN DE ACCESO: ' + result))
+      .then((result) => {
+        console.log("TOKEM: " + result);
+        setCarga(token);
+      })
       .catch((error) => console.error(error));
 
 
