@@ -10,6 +10,14 @@ import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { styled } from '@mui/material/styles';
+import CameraIcon from '@mui/icons-material/Camera';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';//Siguiente
+import ContentCutIcon from '@mui/icons-material/ContentCut'; //Tijeras
+import ReplayIcon from '@mui/icons-material/Replay'; //Volver
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';//Check Continuar
+
 
 const ImageCropper = () => {
 
@@ -296,26 +304,70 @@ const ImageCropper = () => {
       .catch((error) => console.error(error));
 
   }
+  const estilos = { 
 
-  return (    
-    <div className='App'>
+    contenedor: {
+      width: '100%',
+      border: '1px solid black',
+      textAlign: 'center',
+      backgroundColor: '#3f3c38',
+      fontFamily:
+      [
+        'Open Sans',
+        'Helvetica',
+        'sans-serif',
+      ].join(','),
+    },    
+    botonFoto: {
+      color: 'white',
+      border: '1px solid white'
+    },
+    titulo: {
+      fontSize: '12pt'
+    },
+    subtitulo: {
+      fontSize: '11pt'
+    },
+    textoGeneral: {
+      fontSize: '10pt'
+    },
+    colorTexto: {
+      color: 'white'
+    }
+  }
+
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
+
+  return (
+    <div className='App' style={estilos.contenedor}>
       { show &&
       
-        <div>          
+        <div style={estilos.textoGeneral, estilos.colorTexto}>
           {
             dataSelfie.length == 0 && <>
-            <h1>Camara Trasera</h1><br />
+            <h1 style={estilos.titulo}>Camara Trasera</h1><br />
+
             Coloca tu documento de identidad dentro del <br />
             reacuadro para realizar la captura <br />
             </>
           }
           {
-            dataSelfie.length == 1 &&
-            <>
-              <h1>Camara Delantera</h1><br />
-            Coloca tu documento de identidad dentro del <br />
-            reacuadro para realizar la captura <br />
-            </>
+              dataSelfie.length == 1 &&
+              <>
+                <h1>Camara Delantera</h1><br />
+                Coloca tu documento de identidad dentro del <br />
+                reacuadro para realizar la captura <br />
+              </>
           }   
           {
             dataSelfie.length == 2 &&
@@ -333,52 +385,117 @@ const ImageCropper = () => {
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
-            width={500}
-            height={480}
-          />
-          <br />
-          <button onClick={onSelectFile}>Tomar Foto</button>
+            style={{width: '100%', height: '500px'}}           
+          /><br /><br />
+           <Button
+            component="label"
+            role={undefined}
+            variant="outlined"
+            tabIndex={-1}
+            startIcon={<CameraIcon />}
+            style={estilos.botonFoto}
+            onClick={onSelectFile}
+          >
+            Tomar foto            
+          </Button><br /><br /><br /><br />
         </div>
       }
       { show2 &&
-        <div>
-          <h1>Recortar foto</h1>
-          Recorta la foto del documento para obtener un mejor resultado. <br /><br />
-          <ReactCrop
-            src={upImg}
-            onImageLoaded={onLoad}
-            crop={crop}
-            onChange={(c) => setCrop(c)}
-            onComplete={(c) => {onCropComplete(c)}}
-          />
+        <div style={{width: '100%', textAlign: 'center'}}>
+          <h1 style={estilos.titulo}>Recortar foto</h1>
+          <span style={estilos.textoGeneral}>          
+            Recorta la foto del documento para obtener un mejor resultado.
+          </span>
           <br /><br />
-          <button onClick={makeClientCrop}>Recortar Foto</button>
-          <span></span> <button onClick={ocultarPasoUno}>Volver a tomar foto</button>           
-        </div>
-        
+          <div style={{width: '100%'}}>
+            <ReactCrop
+              src={upImg}
+              onImageLoaded={onLoad}
+              crop={crop}              
+              onChange={(c) => setCrop(c)}
+              onComplete={(c) => {onCropComplete(c)}}              
+            />
+          </div>
+          <br /><br />
+          <Button
+            component="label"
+            role={undefined}
+            variant="outlined"
+            tabIndex={-1}
+            startIcon={<ContentCutIcon />}
+            style={estilos.botonFoto}
+            onClick={makeClientCrop}
+          >
+            Recortar Foto          
+          </Button>
+          <span style={{marginLeft: '20px'}}></span>
+          <Button
+            component="label"
+            role={undefined}
+            variant="outlined"
+            tabIndex={-1}
+            startIcon={<ReplayIcon />}
+            style={estilos.botonFoto}
+            onClick={ocultarPasoUno}
+          >
+            Repetir foto
+          </Button><br/><br/><br/><br/>
+        </div>        
       } 
 
       { show3 &&
-        <div>
-        <div>
-          <h2>Foto capturada</h2>
-          Verifique la foto recortada <br /><br />
-          <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImage} />
-        </div><br /><br />
-        <div>
-          <button onClick={ocultarPasoTres}>Repetir foto</button>
-          <span></span> <button onClick={pasoSiguiente}>Continuar</button>           
+        <div style={estilos.contenedor, estilos.colorTexto}>
+          <div >
+            <h2 style={estilos.titulo}>Foto capturada</h2>
+            <span style={estilos.textoGeneral}>
+              Verifique la foto recortada
+              <br /><br />
+            </span>
+            <img alt="Crop" style={{ width: '30%' }} src={croppedImage} />
+          </div><br /><br />
+          <div>
+          <Button
+            component="label"
+            role={undefined}
+            variant="outlined"
+            tabIndex={-1}
+            startIcon={<ReplayIcon />}
+            style={estilos.botonFoto}
+            onClick={ocultarPasoTres}
+          >
+            Repetir foto
+          </Button>
+          
+          <span style={{marginLeft: '20px'}}></span>
+            
+            <Button
+            component="label"
+            role={undefined}
+            variant="outlined"
+            tabIndex={-1}
+            startIcon={<CheckCircleOutlineIcon />}
+            style={estilos.botonFoto}
+            onClick={pasoSiguiente}
+          >
+            Continuar
+          </Button><br/><br/><br/><br/>            
+          </div>
         </div>
-      </div>
       }    
 
       {
         show4 && <>
-          <h1> {carga} </h1>
+        <div style={estilos.contenedor, estilos.colorTexto}>
+
+          <h1 style={estilos.titulo}> {carga} </h1>
+
+        </div>          
         </>
       } 
     </div>
   );
+
+  
 
 }
 export default ImageCropper;
