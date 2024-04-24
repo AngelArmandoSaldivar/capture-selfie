@@ -178,11 +178,11 @@ const ImageCropper = () => {
     urlencoded.append("audience", "veridocid");
 
     const requestOptions = {
-      mode: 'cors',
+      //mode: 'cors',
       method: "POST",
-      headers: myHeaders,
+      //headers: myHeaders,
       body: urlencoded,
-      redirect: "follow"
+      //redirect: "follow"
     };
 
     async function fetchToken() {
