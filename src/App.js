@@ -298,7 +298,7 @@ const ImageCropper = () => {
   }
 
   const videoConstraints = {
-    facingMode: FACING_MODE_USER
+    facingMode: 'FACING_MODE_USER'
   };
 
   return (    
