@@ -407,7 +407,7 @@ const ImageCropper = () => {
             Recorta la foto del documento para obtener un mejor resultado.
           </span>
           <br /><br />
-          <div style={{width: '100%'}}>
+          <div style={{width: '100%', height: '500px'}}>
             <ReactCrop
               src={upImg}
               onImageLoaded={onLoad}
@@ -415,8 +415,7 @@ const ImageCropper = () => {
               onChange={(c) => setCrop(c)}
               onComplete={(c) => {onCropComplete(c)}}              
             />
-          </div>
-          <br /><br />
+          </div>          
           <Button
             component="label"
             role={undefined}
@@ -445,13 +444,13 @@ const ImageCropper = () => {
 
       { show3 &&
         <div style={estilos.contenedor, estilos.colorTexto}>
-          <div >
+          <div style={{width: '100%', height: '15%'}}>
             <h2 style={estilos.titulo}>Foto capturada</h2>
             <span style={estilos.textoGeneral}>
               Verifique la foto recortada
               <br /><br />
             </span>
-            <img alt="Crop" style={{ width: '30%' }} src={croppedImage} />
+            <img alt="Crop" style={{ height: '500px' }} src={croppedImage} />
           </div><br /><br />
           <div>
           <Button
