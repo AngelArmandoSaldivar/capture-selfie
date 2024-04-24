@@ -297,10 +297,6 @@ const ImageCropper = () => {
 
   }
 
-  const videoConstraints = {
-    facingMode: 'FACING_MODE_USER'
-  };
-
   return (    
     <div className='App'>
       { show &&
@@ -308,7 +304,7 @@ const ImageCropper = () => {
         <div>          
           {
             dataSelfie.length == 0 && <>
-            <h1>Camara Traserassss</h1><br />
+            <h1>Camara Trasera</h1><br />
             Coloca tu documento de identidad dentro del <br />
             reacuadro para realizar la captura <br />
             </>
@@ -329,14 +325,10 @@ const ImageCropper = () => {
             reacuadro para realizar la captura <br />
             </>
           }    
-          {/**PARA CAMBIO A CAMARA FRONTAL USAR: FACING_MODE_USER   */}
-          {/**PARA CAMBIO A CAMARA TRASERA USAR: FACING_MODE_ENVIRONMENT */}
+          {/**PARA CAMBIO A CAMARA FRONTAL USAR: user   */}
+          {/**PARA CAMBIO A CAMARA TRASERA USAR: environment */}            
           <Webcam
-            videoConstraints={{facingMode: "FACING_MODE_ENVIRONMENT"}}
-            //videoConstraints={{
-              //...videoConstraints,
-              //facingMode: dataSelfie.length > 2 ? 'FACING_MODE_ENVIRONMENT' : 'FACING_MODE_ENVIRONMENT'
-            //}}
+            videoConstraints={ dataSelfie.length > 2 ? {facingMode: "user"} : {facingMode: "user"}}
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
