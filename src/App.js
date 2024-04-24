@@ -167,26 +167,26 @@ const ImageCropper = () => {
     // ************************************************************************
     // ************************************************************************
     // Creación de token
-    // const myHeaders = new Headers();
-    // myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-    // const urlencoded = new URLSearchParams();
-    // urlencoded.append("grant_type", "client_credentials");
-    // urlencoded.append("client_id", clientId);
-    // urlencoded.append("client_secret", clientSecret);
-    // urlencoded.append("audience", "veridocid");
+    const urlencoded = new URLSearchParams();
+    urlencoded.append("grant_type", "client_credentials");
+    urlencoded.append("client_id", clientId);
+    urlencoded.append("client_secret", clientSecret);
+    urlencoded.append("audience", "veridocid");
 
-    // const requestOptions = {
-    //   method: "POST",
-    //   headers: myHeaders,
-    //   body: urlencoded,
-    //   redirect: "follow"
-    // };
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: "follow"
+    };
 
-    // fetch("https://veridocid.azure-api.net/api/auth/token", requestOptions)
-    //   .then((response) => response.text())
-    //   .then((result) => console.log(result))
-    //   .catch((error) => console.error(error));
+    fetch("https://veridocid.azure-api.net/api/auth/token", requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log('TOKEN DE ACCESO: ' + result))
+      .catch((error) => console.error(error));
 
 
 
@@ -335,18 +335,6 @@ const ImageCropper = () => {
       color: 'white'
     }
   }
-
-  const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-  });
 
   return (
     <div className='App' style={estilos.contenedor}>
