@@ -297,6 +297,10 @@ const ImageCropper = () => {
 
   }
 
+  const videoConstraints = {
+    facingMode: FACING_MODE_USER
+  };
+
   return (    
     <div className='App'>
       { show &&
@@ -328,7 +332,11 @@ const ImageCropper = () => {
           {/**PARA CAMBIO A CAMARA FRONTAL USAR: user   */}
           {/**PARA CAMBIO A CAMARA TRASERA USAR: environment */}            
           <Webcam
-          videoConstraints={ dataSelfie.length > 2 ? {facingMode: "user"} : {facingMode: "environment"}}
+            //videoConstraints={ dataSelfie.length > 2 ? {facingMode: "user"} : {facingMode: "environment"}}
+            videoConstraints={{
+              ...videoConstraints,
+              facingMode: 'FACING_MODE_USER'
+            }}
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
