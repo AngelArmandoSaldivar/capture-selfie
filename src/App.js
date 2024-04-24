@@ -308,7 +308,7 @@ const ImageCropper = () => {
         <div>          
           {
             dataSelfie.length == 0 && <>
-            <h1>Camara Trasera</h1><br />
+            <h1>Camara Traserassss</h1><br />
             Coloca tu documento de identidad dentro del <br />
             reacuadro para realizar la captura <br />
             </>
@@ -330,7 +330,7 @@ const ImageCropper = () => {
             </>
           }    
           {/**PARA CAMBIO A CAMARA FRONTAL USAR: FACING_MODE_USER   */}
-          {/**PARA CAMBIO A CAMARA TRASERA USAR: FACING_MODE_ENVIRONMENT */}            
+          {/**PARA CAMBIO A CAMARA TRASERA USAR: FACING_MODE_ENVIRONMENT */}
           <Webcam
             videoConstraints={{facingMode: "FACING_MODE_ENVIRONMENT"}}
             //videoConstraints={{
