@@ -183,13 +183,19 @@ const ImageCropper = () => {
       redirect: "follow"
     };
 
-    fetch("https://veridocid.azure-api.net/api/auth/token", requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        console.log("TOKEM: " + result);
-        setCarga("TOKEN DE ACCESO: " + token);
-      })
-      .catch((error) => console.error(error));
+    async function fetchToken() {
+      const response = await fetch('https://veridocid.azure-api.net/api/auth/token', requestOptions);
+      console.log("RESPONSE: " + response);
+    }
+    fetchToken();
+
+    // fetch("https://veridocid.azure-api.net/api/auth/token", requestOptions)
+    //   .then((response) => response.text())
+    //   .then((result) => {
+    //     console.log("TOKEM: " + result);
+    //     setCarga("TOKEN DE ACCESO: " + token);
+    //   })
+    //   .catch((error) => console.error(error));
 
 
 
@@ -486,6 +492,5 @@ const ImageCropper = () => {
   );
 
   
-
 }
 export default ImageCropper;
