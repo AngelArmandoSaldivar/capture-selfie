@@ -169,6 +169,7 @@ const ImageCropper = () => {
     // Creación de token
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    myHeaders.append("Access-Control-Allow-Origin", "*")
 
     const urlencoded = new URLSearchParams();
     urlencoded.append("grant_type", "client_credentials");
@@ -177,6 +178,7 @@ const ImageCropper = () => {
     urlencoded.append("audience", "veridocid");
 
     const requestOptions = {
+      mode: 'cors',
       method: "POST",
       headers: myHeaders,
       body: urlencoded,
