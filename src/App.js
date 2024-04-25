@@ -164,38 +164,25 @@ const ImageCropper = () => {
 
   var pruebaVida = (dataSelfie) => {
 
+
     // ************************************************************************
     // ************************************************************************
     // Creación de token
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-    myHeaders.append("Access-Control-Allow-Origin", "*")
+    // const myHeaders = new Headers();
+    // myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-    const urlencoded = new URLSearchParams();
-    urlencoded.append("grant_type", "client_credentials");
-    urlencoded.append("client_id", clientId);
-    urlencoded.append("client_secret", clientSecret);
-    urlencoded.append("audience", "veridocid");
+    // const urlencoded = new URLSearchParams();
+    // urlencoded.append("grant_type", "client_credentials");
+    // urlencoded.append("client_id", clientId);
+    // urlencoded.append("client_secret", clientSecret);
+    // urlencoded.append("audience", "veridocid");
 
-    const requestOptions = {
-      //mode: 'cors',
-      method: "POST",
-      //headers: myHeaders,
-      body: urlencoded,
-      //redirect: "follow"
-    };
-
-    async function fetchToken() {
-      const response = await fetch('https://veridocid.azure-api.net/api/auth/token', requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        console.log("TOKEM: " + result);
-        setCarga("TOKEN DE ACCESO: " + token);
-      })
-      .catch((error) => console.error(error));
-      console.log("RESPONSE: " + response);
-    }
-    fetchToken();
+    // const requestOptions = {
+    //   method: "POST",
+    //   headers: myHeaders,
+    //   body: urlencoded,
+    //   redirect: "follow"
+    // };   
 
     // fetch("https://veridocid.azure-api.net/api/auth/token", requestOptions)
     //   .then((response) => response.text())
@@ -204,8 +191,6 @@ const ImageCropper = () => {
     //     setCarga("TOKEN DE ACCESO: " + token);
     //   })
     //   .catch((error) => console.error(error));
-
-
 
 
     //**********************************************************************************************
@@ -294,6 +279,32 @@ const ImageCropper = () => {
     // })    
     // .catch((error) => console.error(error));
    
+  }
+
+  function generadorToken() {
+    
+    const myHeaders = new Headers();
+    myHeaders.append("Content-type", "application/json");
+    myHeaders.append("Authorization", "OAuth realm=\"9323217\",oauth_consumer_key=\"6909223765d68229f521ae5355031e937bc39ff684ce9a38ca644f8c9929bf1a\",oauth_token=\"5e39a16ee321f9fab4d635bc694decb02b470de42e13c362d5f0f9b8a6b8b471\",oauth_signature_method=\"HMAC-SHA256\",oauth_timestamp=\"1714010221\",oauth_nonce=\"V6bDTePTAGv\",oauth_version=\"1.0\",oauth_signature=\"wJVyVR2TmfDQOxBLTnfaVNgLxgNuNKDSjsJ9lR3irtk%3D\"");
+    myHeaders.append("Cookie", "_abck=6D4A99472AEB74D57807B05C3A17AEDB~-1~YAAQT8X3vQ9lDPOOAQAASPMV+AsVpjjapbj7mcumlFM2pZPpqIkbiUbGehCqxvzPkEJWsq8yYJw9JplexuTsWQ//ihXsGyr+rDVytKoTJaqIKgVjMIHBZRG505cwIIYYG1+vE9MXYv145n/K/Jv3b71L1xG3fUJTHe6+hJuFWbKcorIQMg47R1Kd0N3SVHuzN83qR33eyVWma8XS5D5MoYGO7oKVlkE2cRoAmDkyAbgX6nBywfgLbOaEC6g8/AFU8RLiA/dPrqqpxfIzUwKji9WeSBqEAnPH6kI9hg7NpBl+DFbtdiLqLq0KmfJnwxIiPC/8iYcWBXWP/VPtzQTCfFaDn8v4Vqy+/kbjvt/l+dZtb1HT9NlI2lVAUL24jWLQSZgeP5HciwFh~-1~-1~-1");
+
+    const raw = "";
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow"
+    };
+
+    fetch("https://9323217.restlets.api.netsuite.com/app/site/hosting/restlet.nl?deploy=1&script=385", requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+        console.log("TOKEN GENERADO: " + result);
+        setCarga("TOKEN GENERADO" + result)
+      })
+      .catch((error) => console.error(error));
+
   }
 
   function crearCustomer(customer) {
