@@ -18,7 +18,6 @@ import ContentCutIcon from '@mui/icons-material/ContentCut'; //Tijeras
 import ReplayIcon from '@mui/icons-material/Replay'; //Volver
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';//Check Continuar
 
-
 const ImageCropper = () => {
 
   const [upImg, setUpImg] = useState();
@@ -156,142 +155,43 @@ const ImageCropper = () => {
       pruebaVida(dataSelfie);
     }
   }
+
+
+  function prueba() {
+    return "Hola";
+  }
   
   // Función para generar un identificador único
   function generarIdentificadorUnico() {
     return uuidv4();
   }
 
-  var pruebaVida = (dataSelfie) => {
+  var pruebaVida = async (dataSelfie) => {
 
-    generadorToken();
+    const token = await fetch("https://server-capture-selfie-b01dd8c9a312.herokuapp.com/getToken")
+                        .then((response) => response.text());
 
-
-    // ************************************************************************
-    // ************************************************************************
-    // Creación de token
-    // const myHeaders = new Headers();
-    // myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-    // const urlencoded = new URLSearchParams();
-    // urlencoded.append("grant_type", "client_credentials");
-    // urlencoded.append("client_id", clientId);
-    // urlencoded.append("client_secret", clientSecret);
-    // urlencoded.append("audience", "veridocid");
-
-    // const requestOptions = {
-    //   method: "POST",
-    //   headers: myHeaders,
-    //   body: urlencoded,
-    //   redirect: "follow"
-    // };   
-
-    // fetch("https://veridocid.azure-api.net/api/auth/token", requestOptions)
-    //   .then((response) => response.text())
-    //   .then((result) => {
-    //     console.log("TOKEM: " + result);
-    //     setCarga("TOKEN DE ACCESO: " + token);
-    //   })
-    //   .catch((error) => console.error(error));
-
+    console.log("TOKEN ACCESO PRUEBA VIDA: " + token);
 
     //**********************************************************************************************
     //**********************************************************************************************
     //Verificador de Documentos (Prueba de vida).
 
-    // var ineBack = dataSelfie[0].replace(new RegExp("data:image/jpeg;base64,", "gi"), "");
-    // var ineFront = dataSelfie[1].replace(new RegExp("data:image/jpeg;base64,", "gi"), "");
-    // var selfie = dataSelfie[2].replace(new RegExp("data:image/jpeg;base64,", "gi"), "");
+    var ineBack = dataSelfie[0].replace(new RegExp("data:image/jpeg;base64,", "gi"), "");
+    var ineFront = dataSelfie[1].replace(new RegExp("data:image/jpeg;base64,", "gi"), "");
+    var selfie = dataSelfie[2].replace(new RegExp("data:image/jpeg;base64,", "gi"), "");
 
-    // const myHeaders = new Headers();
-    // myHeaders.append("Content-Type", "application/json");
-    // myHeaders.append("Authorization", "Bearer" + " " + 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlF6TnNRbUpBNm45NUt6cWMyb2NVUSJ9.eyJpc3MiOiJodHRwczovL3Zlcmlkb2NpZC5hdXRoMC5jb20vIiwic3ViIjoic01zZUFVeHpTRTJBNXdOZTJ0eW9TMUNxWEtkT2lLUHhAY2xpZW50cyIsImF1ZCI6InZlcmlkb2NpZCIsImlhdCI6MTcxMzg5Mjc4NCwiZXhwIjoxNzEzOTc5MTg0LCJzY29wZSI6ImlkIG9jciBjdXJwIGluZSBuc3MgcmZjOnZhbGlkYXRlIGNyZWRpdCBmYWNlOmVucm9sbCBpZDpmYWNlIGlkOmJsYWNrbGlzdCBpZDpsaXZlbmVzcyBjaGVjazplbWFpbCBjaGVjazpwaG9uZSBjaGVjazppcCBpbXNzIGNoZWNrOmJsYWNrbGlzdCBzaWduOnN1bWEgY2hlY2s6bGlzdDY5IGxlZ2FscmVjb3JkIGNpZiBjZmRpIG9jIGlkOmZyYXVkIHdlYmhvb2s6Z2V0IHdlYmhvb2s6YWRkIHdlYmhvb2s6dXBkYXRlIHdlYmhvb2s6ZGVsZXRlIG11YSByZXBzZSBjaGVjazpmcmF1ZGxpc3QgZW50ZXJwcmlzZSBpZDpzZWN1cml0eWZlYXR1cmVzIGlkOm1hbnkiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMiLCJhenAiOiJzTXNlQVV4elNFMkE1d05lMnR5b1MxQ3FYS2RPaUtQeCIsInBlcm1pc3Npb25zIjpbImlkIiwib2NyIiwiY3VycCIsImluZSIsIm5zcyIsInJmYzp2YWxpZGF0ZSIsImNyZWRpdCIsImZhY2U6ZW5yb2xsIiwiaWQ6ZmFjZSIsImlkOmJsYWNrbGlzdCIsImlkOmxpdmVuZXNzIiwiY2hlY2s6ZW1haWwiLCJjaGVjazpwaG9uZSIsImNoZWNrOmlwIiwiaW1zcyIsImNoZWNrOmJsYWNrbGlzdCIsInNpZ246c3VtYSIsImNoZWNrOmxpc3Q2OSIsImxlZ2FscmVjb3JkIiwiY2lmIiwiY2ZkaSIsIm9jIiwiaWQ6ZnJhdWQiLCJ3ZWJob29rOmdldCIsIndlYmhvb2s6YWRkIiwid2ViaG9vazp1cGRhdGUiLCJ3ZWJob29rOmRlbGV0ZSIsIm11YSIsInJlcHNlIiwiY2hlY2s6ZnJhdWRsaXN0IiwiZW50ZXJwcmlzZSIsImlkOnNlY3VyaXR5ZmVhdHVyZXMiLCJpZDptYW55Il19.hzYUMxKpf2mvBPJ67YiW0kAWE39qiQ5LvgpbZ7rY2-K7ek2czP5M71aAm-I2zK294c_YgX7bd7TXqs5nlLBfv53jo26JBl_FOFhZkisXcxguAvVW8XHRF5kOPoehF3Cny9SSKjQPzCOS9jwE4mrLtOjz0nLAg1GvcaivFSSTQDoik4aLUXGEs7yTjV-YNZjXQuml1DvLYcLmk_-Uh1s4B_wO4UceMT4UaBlfl7_FK4ePjrQIeuiou4gzkyTw9fNbHBI_Ub3RGW_jQjUaJdV7fGixvQF6fXnnCDOZ2GN_7MlvjahLJ4Ci94AeoWVL9iawr95RX9WwZCpG4sVxoK5FIQ');
-
-    // const raw = JSON.stringify({
-    //   "id": generarIdentificadorUnico(),
-    //   "frontImage": ineBack,
-    //   "backImage": ineFront,
-    //   "faceImage": selfie
-    // });
-    
-    // const requestOptions = {
-    //   method: "POST",
-    //   headers: myHeaders,
-    //   body: raw,
-    //   redirect: "follow"
-    // };
-
-    // fetch("https://veridocid.azure-api.net/api/id/v3/verify", requestOptions)
-    // .then((response) => response.text())
-    // .then((result) => {
-    //   console.log("=====ENTRASTE A VERIFICACION DOCUMENTO======");
-    //   console.log("RESULT: " + result);
-    //   setCarga('Espere mientras se verifica tu información...');
-
-
-
-    //   setTimeout(() => {        
-    //     const myHeaders = new Headers();
-    //     myHeaders.append("Content-Type", "application/json");
-    //     myHeaders.append("Authorization", "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlF6TnNRbUpBNm45NUt6cWMyb2NVUSJ9.eyJpc3MiOiJodHRwczovL3Zlcmlkb2NpZC5hdXRoMC5jb20vIiwic3ViIjoic01zZUFVeHpTRTJBNXdOZTJ0eW9TMUNxWEtkT2lLUHhAY2xpZW50cyIsImF1ZCI6InZlcmlkb2NpZCIsImlhdCI6MTcxMzg5Mjc4NCwiZXhwIjoxNzEzOTc5MTg0LCJzY29wZSI6ImlkIG9jciBjdXJwIGluZSBuc3MgcmZjOnZhbGlkYXRlIGNyZWRpdCBmYWNlOmVucm9sbCBpZDpmYWNlIGlkOmJsYWNrbGlzdCBpZDpsaXZlbmVzcyBjaGVjazplbWFpbCBjaGVjazpwaG9uZSBjaGVjazppcCBpbXNzIGNoZWNrOmJsYWNrbGlzdCBzaWduOnN1bWEgY2hlY2s6bGlzdDY5IGxlZ2FscmVjb3JkIGNpZiBjZmRpIG9jIGlkOmZyYXVkIHdlYmhvb2s6Z2V0IHdlYmhvb2s6YWRkIHdlYmhvb2s6dXBkYXRlIHdlYmhvb2s6ZGVsZXRlIG11YSByZXBzZSBjaGVjazpmcmF1ZGxpc3QgZW50ZXJwcmlzZSBpZDpzZWN1cml0eWZlYXR1cmVzIGlkOm1hbnkiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMiLCJhenAiOiJzTXNlQVV4elNFMkE1d05lMnR5b1MxQ3FYS2RPaUtQeCIsInBlcm1pc3Npb25zIjpbImlkIiwib2NyIiwiY3VycCIsImluZSIsIm5zcyIsInJmYzp2YWxpZGF0ZSIsImNyZWRpdCIsImZhY2U6ZW5yb2xsIiwiaWQ6ZmFjZSIsImlkOmJsYWNrbGlzdCIsImlkOmxpdmVuZXNzIiwiY2hlY2s6ZW1haWwiLCJjaGVjazpwaG9uZSIsImNoZWNrOmlwIiwiaW1zcyIsImNoZWNrOmJsYWNrbGlzdCIsInNpZ246c3VtYSIsImNoZWNrOmxpc3Q2OSIsImxlZ2FscmVjb3JkIiwiY2lmIiwiY2ZkaSIsIm9jIiwiaWQ6ZnJhdWQiLCJ3ZWJob29rOmdldCIsIndlYmhvb2s6YWRkIiwid2ViaG9vazp1cGRhdGUiLCJ3ZWJob29rOmRlbGV0ZSIsIm11YSIsInJlcHNlIiwiY2hlY2s6ZnJhdWRsaXN0IiwiZW50ZXJwcmlzZSIsImlkOnNlY3VyaXR5ZmVhdHVyZXMiLCJpZDptYW55Il19.hzYUMxKpf2mvBPJ67YiW0kAWE39qiQ5LvgpbZ7rY2-K7ek2czP5M71aAm-I2zK294c_YgX7bd7TXqs5nlLBfv53jo26JBl_FOFhZkisXcxguAvVW8XHRF5kOPoehF3Cny9SSKjQPzCOS9jwE4mrLtOjz0nLAg1GvcaivFSSTQDoik4aLUXGEs7yTjV-YNZjXQuml1DvLYcLmk_-Uh1s4B_wO4UceMT4UaBlfl7_FK4ePjrQIeuiou4gzkyTw9fNbHBI_Ub3RGW_jQjUaJdV7fGixvQF6fXnnCDOZ2GN_7MlvjahLJ4Ci94AeoWVL9iawr95RX9WwZCpG4sVxoK5FIQ");
-
-    //     const raw = JSON.stringify({
-    //       "uuid": result,
-    //       "includeImages": false
-    //     });
-
-    //     const requestOptions = {
-    //       method: "POST",
-    //       headers: myHeaders,
-    //       body: raw,
-    //       redirect: "follow"
-    //     };        
-
-    //     fetch("https://veridocid.azure-api.net/api/id/v3/results", requestOptions)
-    //       .then((response) => response.text())
-    //       .then((result) => {
-    //         if(!result.identifier) {              
-    //           setTimeout(() => {
-    //             fetch("https://veridocid.azure-api.net/api/id/v3/results", requestOptions)
-    //             .then((response) => response.text())
-    //             .then((result) => {
-    //               if(!result.identifier) {
-    //                 setTimeout(() => {
-    //                   fetch("https://veridocid.azure-api.net/api/id/v3/results", requestOptions)
-    //                   .then((response) => response.text())
-    //                   .then((result) => {
-    //                     setCarga('Datos enviados con exito!');
-    //                     crearCustomer(result);
-    //                   })
-    //                 }, 20000);                    
-    //               } else {
-    //                 setCarga('Datos enviados con exito!');
-    //                 crearCustomer(result);
-    //               }
-    //             })
-    //           }, 20000);
-    //         } else {
-    //           setCarga('Datos enviados con exito!');
-    //           crearCustomer(result);
-    //         }
-    //       })
-    //       .catch((error) => console.error(error));
-    //   }, 20000);
-                  
-    // })    
-    // .catch((error) => console.error(error));
-   
-  }
-
-  function generadorToken() {
-    
     const myHeaders = new Headers();
-    myHeaders.append("Content-type", "application/json");
-    myHeaders.append("Authorization", "OAuth realm=\"9323217\",oauth_consumer_key=\"6909223765d68229f521ae5355031e937bc39ff684ce9a38ca644f8c9929bf1a\",oauth_token=\"5e39a16ee321f9fab4d635bc694decb02b470de42e13c362d5f0f9b8a6b8b471\",oauth_signature_method=\"HMAC-SHA256\",oauth_timestamp=\"1714010221\",oauth_nonce=\"V6bDTePTAGv\",oauth_version=\"1.0\",oauth_signature=\"wJVyVR2TmfDQOxBLTnfaVNgLxgNuNKDSjsJ9lR3irtk%3D\"");
-    myHeaders.append("Cookie", "_abck=6D4A99472AEB74D57807B05C3A17AEDB~-1~YAAQT8X3vQ9lDPOOAQAASPMV+AsVpjjapbj7mcumlFM2pZPpqIkbiUbGehCqxvzPkEJWsq8yYJw9JplexuTsWQ//ihXsGyr+rDVytKoTJaqIKgVjMIHBZRG505cwIIYYG1+vE9MXYv145n/K/Jv3b71L1xG3fUJTHe6+hJuFWbKcorIQMg47R1Kd0N3SVHuzN83qR33eyVWma8XS5D5MoYGO7oKVlkE2cRoAmDkyAbgX6nBywfgLbOaEC6g8/AFU8RLiA/dPrqqpxfIzUwKji9WeSBqEAnPH6kI9hg7NpBl+DFbtdiLqLq0KmfJnwxIiPC/8iYcWBXWP/VPtzQTCfFaDn8v4Vqy+/kbjvt/l+dZtb1HT9NlI2lVAUL24jWLQSZgeP5HciwFh~-1~-1~-1");
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", "Bearer" + " " + token);
 
-    const raw = "";
-
+    const raw = JSON.stringify({
+      "id": generarIdentificadorUnico(),
+      "frontImage": ineBack,
+      "backImage": ineFront,
+      "faceImage": selfie
+    });
+    
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -299,14 +199,65 @@ const ImageCropper = () => {
       redirect: "follow"
     };
 
-    fetch("https://9323217.restlets.api.netsuite.com/app/site/hosting/restlet.nl?deploy=1&script=385", requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        console.log("TOKEN GENERADO: " + result);
-        setCarga("TOKEN GENERADO" + result)
-      })
-      .catch((error) => console.error(error));
+    fetch("https://veridocid.azure-api.net/api/id/v3/verify", requestOptions)
+    .then((response) => response.text())
+    .then((result) => {
+      console.log("TOKEN 2: " + token);
+      console.log("=====ENTRASTE A VERIFICACION DOCUMENTO======");
+      console.log("RESULT: " + result);
+      setCarga('Espere mientras se verifica tu información...');
 
+      setTimeout(() => {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", "Bearer" + " " + token);
+
+        const raw = JSON.stringify({
+          "uuid": result,
+          "includeImages": false
+        });
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow"
+        };        
+
+        fetch("https://veridocid.azure-api.net/api/id/v3/results", requestOptions)
+          .then((response) => response.text())
+          .then((result) => {
+            if(!result.identifier) {              
+              setTimeout(() => {
+                fetch("https://veridocid.azure-api.net/api/id/v3/results", requestOptions)
+                .then((response) => response.text())
+                .then((result) => {
+                  if(!result.identifier) {
+                    setTimeout(() => {
+                      fetch("https://veridocid.azure-api.net/api/id/v3/results", requestOptions)
+                      .then((response) => response.text())
+                      .then((result) => {
+                        setCarga('Datos enviados con exito!');
+                        crearCustomer(result);
+                      })
+                    }, 20000);
+                  } else {
+                    setCarga('Datos enviados con exito!');
+                    crearCustomer(result);
+                  }
+                })
+              }, 20000);
+            } else {
+              setCarga('Datos enviados con exito!');
+              crearCustomer(result);
+            }
+          })
+          .catch((error) => console.error(error));
+      }, 20000);
+                  
+    })    
+    .catch((error) => console.error(error));
+   
   }
 
   function crearCustomer(customer) {
@@ -506,7 +457,7 @@ const ImageCropper = () => {
 
           <h1 style={estilos.titulo}> {carga} </h1>
 
-        </div>          
+        </div>
         </>
       } 
     </div>
