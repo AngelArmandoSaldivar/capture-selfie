@@ -358,7 +358,7 @@ const ImageCropper = () => {
     height: 'auto',
   },
   imagenRecortada: {
-    width: '100%',
+    width: '200%',
     height: 'auto',
     maxWidth: '100%',
     maxHeight: '500px',
