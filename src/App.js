@@ -285,184 +285,227 @@ const ImageCropper = () => {
       .catch((error) => console.error(error));
 
   }
-  const estilos = { 
 
-    contenedor: {
-      width: '100%',
-      border: '1px solid black',
-      textAlign: 'center',
-      backgroundColor: '#3f3c38',
-      fontFamily:
-      [
-        'Open Sans',
-        'Helvetica',
-        'sans-serif',
-      ].join(','),
-    },    
-    botonFoto: {
-      color: 'white',
-      border: '1px solid white'
+ const estilos = {
+  contenedor: {
+    width: '100%',
+    border: '1px solid black',
+    textAlign: 'center',
+    backgroundColor: '#3f3c38',
+    fontFamily: ['Open Sans', 'Helvetica', 'sans-serif'].join(','),
+    padding: '20px',
+    boxSizing: 'border-box',
+  },
+  botonFoto: {
+    color: 'white',
+    border: '1px solid white',
+    margin: '10px 0',
+  },
+  titulo: {
+    fontSize: '2em',
+    '@media (max-width: 768px)': {
+      fontSize: '1.5em',
     },
-    titulo: {
-      fontSize: '12pt'
+  },
+  subtitulo: {
+    fontSize: '1.8em',
+    '@media (max-width: 768px)': {
+      fontSize: '1.2em',
     },
-    subtitulo: {
-      fontSize: '11pt'
+  },
+  textoGeneral: {
+    fontSize: '1.5em',
+    '@media (max-width: 768px)': {
+      fontSize: '1em',
     },
-    textoGeneral: {
-      fontSize: '10pt'
-    },
-    colorTexto: {
-      color: 'white'
-    }
-  }
+  },
+  colorTexto: {
+    color: 'white',
+  },
+  recuadroPunteadoInterno: {
+    border: '2px dashed white',
+    position: 'absolute',
+    width: '60%',
+    height: '40%',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    pointerEvents: 'none',
+    maxWidth: '80%',
+    maxHeight: '60%',
+  },
+  ovaloPunteadoInterno: {
+    border: '2px dashed white',
+    borderRadius: '50%',
+    position: 'absolute',
+    width: '40%',
+    height: '60%',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    pointerEvents: 'none',
+    maxWidth: '60%',
+    maxHeight: '70%',
+  },
+  webcamContenedor: {
+    position: 'relative',
+    width: '100%',
+    height: 'auto',
+    marginBottom: '20px',
+  },
+  webcam: {
+    width: '100%',
+    height: 'auto',
+  },
+  imagenRecortada: {
+    width: '100%',
+    height: 'auto',
+    maxWidth: '100%',
+    maxHeight: '500px',
+  },
+};
 
-  return (
-    <div className='App' style={estilos.contenedor}>
-      { show &&
-      
-        <div style={estilos.textoGeneral, estilos.colorTexto}>
-          {
-            dataSelfie.length == 0 && <>
-            <h1 style={estilos.titulo}>Camara Trasera</h1><br />
+return (
+  <div className='App' style={estilos.contenedor}>
+    { show &&
+      <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
+        {dataSelfie.length === 0 && <>
+          <h1 style={estilos.titulo}>Camara Trasera</h1><br />
+          <p>Coloca tu documento de identidad dentro del recuadro para realizar la captura.</p>
+        </>}
+        {dataSelfie.length === 1 && <>
+          <h1>Camara Delantera</h1><br />
+          <p>Coloca tu documento de identidad dentro del recuadro para realizar la captura.</p>
+        </>}
+        {dataSelfie.length === 2 && <>
+          <h1>Tómate una Selfie</h1><br />
+          <p>Coloca tu rostro dentro del óvalo para realizar la captura.</p>
+        </>}
 
-            Coloca tu documento de identidad dentro del <br />
-            reacuadro para realizar la captura <br />
-            </>
-          }
-          {
-              dataSelfie.length == 1 &&
-              <>
-                <h1>Camara Delantera</h1><br />
-                Coloca tu documento de identidad dentro del <br />
-                reacuadro para realizar la captura <br />
-              </>
-          }   
-          {
-            dataSelfie.length == 2 &&
-            <>
-              <h1>Tómate una Selfie</h1><br />
-            Coloca tu rostro dentro del <br />
-            reacuadro para realizar la captura <br />
-            </>
-          }    
-          {/**PARA CAMBIO A CAMARA FRONTAL USAR: user   */}
-          {/**PARA CAMBIO A CAMARA TRASERA USAR: environment */}
-          
+        <div style={estilos.webcamContenedor}>
           <Webcam
-            videoConstraints={ dataSelfie.length == 2 ? {facingMode: "user"} : {facingMode: "environment"}}
+            videoConstraints={dataSelfie.length === 2 ? { facingMode: "user" } : { facingMode: "environment" }}
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
-            style={{width: '100%', height: '500px'}}           
-          /><br /><br />
-           <Button
-            component="label"
-            role={undefined}
-            variant="outlined"
-            tabIndex={-1}
-            startIcon={<CameraIcon />}
-            style={estilos.botonFoto}
-            onClick={onSelectFile}
-          >
-            Tomar foto            
-          </Button><br /><br /><br /><br />
-        </div>
-      }
-      { show2 &&
-        <div style={{width: '100%', textAlign: 'center'}}>
-          <h1 style={estilos.titulo}>Recortar foto</h1>
-          <span style={estilos.textoGeneral}>          
-            Recorta la foto del documento para obtener un mejor resultado.
-          </span>
-          <br /><br />
-          <div style={{width: '100%', height: '500px'}}>
-            <ReactCrop
-              src={upImg}
-              onImageLoaded={onLoad}
-              crop={crop}              
-              onChange={(c) => setCrop(c)}
-              onComplete={(c) => {onCropComplete(c)}}              
-            />
-          </div>          
-          <Button
-            component="label"
-            role={undefined}
-            variant="outlined"
-            tabIndex={-1}
-            startIcon={<ContentCutIcon />}
-            style={estilos.botonFoto}
-            onClick={makeClientCrop}
-          >
-            Recortar Foto          
-          </Button>
-          <span style={{marginLeft: '20px'}}></span>
-          <Button
-            component="label"
-            role={undefined}
-            variant="outlined"
-            tabIndex={-1}
-            startIcon={<ReplayIcon />}
-            style={estilos.botonFoto}
-            onClick={ocultarPasoUno}
-          >
-            Repetir foto
-          </Button><br/><br/><br/><br/>
-        </div>        
-      } 
+            style={estilos.webcam}
+          />
+          <div style={dataSelfie.length === 2 ? estilos.ovaloPunteadoInterno : estilos.recuadroPunteadoInterno}></div>
+        </div><br /><br />
+        <Button
+          component="label"
+          role={undefined}
+          variant="outlined"
+          tabIndex={-1}
+          startIcon={<CameraIcon />}
+          style={estilos.botonFoto}
+          onClick={onSelectFile}
+        >
+          Tomar foto
+        </Button><br /><br /><br /><br />
+      </div>
+    }
 
-      { show3 &&
-        <div style={estilos.contenedor, estilos.colorTexto}>
-          <div style={{width: '100%', height: '15%'}}>
+    { show2 &&
+      <div style={{ width: '100%', textAlign: 'center' }}>
+        <h1 style={{...estilos.titulo, ...estilos.colorTexto}}>Recortar foto</h1>
+        <span style={{...estilos.textoGeneral, ...estilos.colorTexto}}>
+          Recorta la foto del documento para obtener un mejor resultado.
+        </span>
+        <br /><br />
+        <div style={{ width: '100%', height: 'auto', position: 'relative' }}>
+          <ReactCrop
+            src={upImg}
+            crop={dataSelfie.length === 2 ? {
+              unit: '%',
+              x: 30,
+              y: 20,
+              width: 40,
+              height: 60
+            } : {
+              unit: '%',
+              x: 20,
+              y: 30,
+              width: 60,
+              height: 40
+            }}
+            onImageLoaded={onLoad}
+            onChange={(c) => setCrop(c)}
+            onComplete={(c) => onCropComplete(c)}
+            style={{ width: '100%', height: 'auto' }}
+          />
+          <div style={dataSelfie.length === 2 ? estilos.ovaloPunteadoInterno : estilos.recuadroPunteadoInterno}></div>
+        </div>
+        <Button
+          component="label"
+          role={undefined}
+          variant="outlined"
+          tabIndex={-1}
+          startIcon={<ContentCutIcon />}
+          style={estilos.botonFoto}
+          onClick={makeClientCrop}
+        >
+          Recortar Foto
+        </Button>
+        <span style={{ marginLeft: '20px' }}></span>
+        <Button
+          component="label"
+          role={undefined}
+          variant="outlined"
+          tabIndex={-1}
+          startIcon={<ReplayIcon />}
+          style={estilos.botonFoto}
+          onClick={ocultarPasoUno}
+        >
+          Repetir foto
+        </Button><br /><br /><br /><br />
+      </div>
+    }
+          { show3 &&
+        <div style={{ ...estilos.contenedor, ...estilos.colorTexto }}>
+          <div style={{ width: '100%', height: '15%' }}>
             <h2 style={estilos.titulo}>Foto capturada</h2>
             <span style={estilos.textoGeneral}>
               Verifique la foto recortada
               <br /><br />
             </span>
-            <img alt="Crop" style={{ height: '500px' }} src={croppedImage} />
+            <img alt="Crop" style={estilos.imagenRecortada} src={croppedImage} />
           </div><br /><br />
           <div>
-          <Button
-            component="label"
-            role={undefined}
-            variant="outlined"
-            tabIndex={-1}
-            startIcon={<ReplayIcon />}
-            style={estilos.botonFoto}
-            onClick={ocultarPasoTres}
-          >
-            Repetir foto
-          </Button>
-          
-          <span style={{marginLeft: '20px'}}></span>
-            
             <Button
-            component="label"
-            role={undefined}
-            variant="outlined"
-            tabIndex={-1}
-            startIcon={<CheckCircleOutlineIcon />}
-            style={estilos.botonFoto}
-            onClick={pasoSiguiente}
-          >
-            Continuar
-          </Button><br/><br/><br/><br/>            
+              component="label"
+              role={undefined}
+              variant="outlined"
+              tabIndex={-1}
+              startIcon={<ReplayIcon />}
+              style={estilos.botonFoto}
+              onClick={ocultarPasoTres}
+            >
+              Repetir foto
+            </Button>
+            <span style={{ marginLeft: '20px' }}></span>
+            <Button
+              component="label"
+              role={undefined}
+              variant="outlined"
+              tabIndex={-1}
+              startIcon={<CheckCircleOutlineIcon />}
+              style={estilos.botonFoto}
+              onClick={pasoSiguiente}
+            >
+              Continuar
+            </Button><br /><br /><br /><br />
           </div>
         </div>
-      }    
+      }
 
-      {
-        show4 && <>
-        <div style={estilos.contenedor, estilos.colorTexto}>
-
-          <h1 style={estilos.titulo}> {carga} </h1>
-
+      { show4 && <>
+        <div style={{ ...estilos.contenedor, ...estilos.colorTexto }}>
+          <h1 style={estilos.titulo}>{carga}</h1>
         </div>
-        </>
-      } 
+      </>}
     </div>
   );
-
-  
 }
+
 export default ImageCropper;
