@@ -22,14 +22,15 @@ const ImageCropper = () => {
 
   const [upImg, setUpImg] = useState();
   const imgRef = useRef(null);  
-  const [crop, setCrop] = useState({ x: 70, y: 50, width: 220, height: 250 });  
   const webcamRef = useRef(null);    
   const [show, setShow] = useState(true);
   const [show2, setShow2] = useState(false);
   const [show3, setShow3] = useState(false);
   const [show4, setShow4] = useState(false);
   const [dataSelfie, setDataSelfie] = useState([]);
-  const [croppedImage, setCroppedImage] = useState('');
+  const [crop, setCrop] = useState({ unit: '%', x: 20, y: 30, width: 60, height: 40, aspect: 3 / 2 });
+  const [croppedImage, setCroppedImage] = useState('null');
+  const [showOverlay, setShowOverlay] = useState(true);
   const [src, setSrc] = useState(null);
   const [cropWidth, setCropWidth] = useState('');
   const [cropHeight, setCropHeight] = useState('');
@@ -45,6 +46,7 @@ const ImageCropper = () => {
 
   const onSelectFile = useCallback((e) => {
     if (webcamRef.current.getScreenshot()) {
+      setCrop({ unit: '%', x: 20, y: 30, width: 60, height: 40, aspect: 3 / 2 }); 
       const reader = new FileReader();      
       setSrc(webcamRef.current.getScreenshot());
       setUpImg(webcamRef.current.getScreenshot());
@@ -60,6 +62,7 @@ const ImageCropper = () => {
       reader.readAsDataURL(file);
       setShow(!show);
       setShow2(!show2);
+      setShowOverlay(false);
     }
   }, [webcamRef]);
 
@@ -131,6 +134,7 @@ const ImageCropper = () => {
   var ocultarPasoUno = () => {
     setShow(!show);
     setShow2(!show2);
+    setShowOverlay(true);
     if(show3 == true) {
       return dataSelfie.length > 0 ? dataSelfie = [] : '';
     }    
@@ -139,12 +143,15 @@ const ImageCropper = () => {
   var ocultarPasoTres = () => {
     setShow3(!show3);
     setShow(!show);
+    setShowOverlay(true);
+
     dataSelfie.pop();    
   }
 
   var pasoSiguiente = () => {
     setShow3(!show3);
-    setShow(!show);    
+    setShow(!show); 
+    setShowOverlay(true);   
     setCrop({ x: 70, y: 50, width: 220, height: 250 });
 
     if(dataSelfie.length == 3) {
@@ -154,7 +161,7 @@ const ImageCropper = () => {
       setShow4(!show4);      
       pruebaVida(dataSelfie);
     }
-  }  
+  }
 
 
   function prueba() {
@@ -173,8 +180,8 @@ const ImageCropper = () => {
 
     console.log("TOKEN ACCESO PRUEBA VIDA: " + token);
 
-    //**********************************************************************************************
-    //**********************************************************************************************
+    //********************************
+    //********************************
     //Verificador de Documentos (Prueba de vida).
 
     var ineBack = dataSelfie[0].replace(new RegExp("data:image/jpeg;base64,", "gi"), "");
@@ -285,46 +292,61 @@ const ImageCropper = () => {
       .catch((error) => console.error(error));
 
   }
-
-
+  
   const estilos = {
     contenedor: {
       width: '100%',
       border: '1px solid black',
       textAlign: 'center',
-      backgroundColor: '#3f3c38',
+      backgroundColor: '#c0c0c0', 
       fontFamily: ['Open Sans', 'Helvetica', 'sans-serif'].join(','),
       padding: '20px',
       boxSizing: 'border-box',
+      color: '#333',
     },
     botonFoto: {
       color: 'white',
-      border: '1px solid white',
-      margin: '10px 0',
+      border: '1px solid #007BFF',
+      backgroundColor: '#007BFF',
+      margin: '10px',
+      width: '200px',
+      height: '50px',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: '5px',
+      transition: 'background-color 0.3s ease',
+    },
+    botonFotoHover: {
+      backgroundColor: '#0056b3',
     },
     titulo: {
-      fontSize: '2em',
-      '@media (max-width: 768px)': {
-        fontSize: '1.5em',
-      },
+      fontSize: '1.5em',
+      fontWeight: 'bold',
+      margin: '10px 0',
+      backgroundColor: '#007BFF', 
+      color: 'white', 
+      padding: '10px',
+      borderRadius: '5px',
     },
     subtitulo: {
-      fontSize: '1.8em',
-      '@media (max-width: 768px)': {
-        fontSize: '1.2em',
-      },
+      fontSize: '1.5em',
+      margin: '10px 0',
+      backgroundColor: '#007BFF', 
+      color: 'white', 
+      padding: '10px',
+      borderRadius: '5px',
     },
     textoGeneral: {
-      fontSize: '1.5em',
-      '@media (max-width: 768px)': {
-        fontSize: '1em',
-      },
-    },
-    colorTexto: {
-      color: 'white',
+      fontSize: '1em',
+      lineHeight: '1.5',
+      margin: '10px 0',
+      backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+      color: '#333', 
+      padding: '10px',
+      borderRadius: '5px',
     },
     recuadroPunteadoInterno: {
-      border: '2px dashed white',
+      border: '2px dashed white', 
       position: 'absolute',
       width: '60%',
       height: '40%',
@@ -336,7 +358,7 @@ const ImageCropper = () => {
       maxHeight: '60%',
     },
     ovaloPunteadoInterno: {
-      border: '2px dashed white',
+      border: '2px dashed #007BFF', 
       borderRadius: '50%',
       position: 'absolute',
       width: '40%',
@@ -353,50 +375,74 @@ const ImageCropper = () => {
       width: '100%',
       height: 'auto',
       marginBottom: '20px',
+      borderRadius: '10px',
+      overflow: 'hidden',
     },
     webcam: {
       width: '100%',
       height: 'auto',
+      borderRadius: '10px',
     },
     imagenRecortada: {
       width: '100%',
       height: 'auto',
       maxWidth: '100%',
       maxHeight: '500px',
+      borderRadius: '10px',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    },
+    cropContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
+      height: 'auto',
+      margin: '0 auto',
+      borderRadius: '10px',
+      overflow: 'hidden',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
     },
   };
-  
+
   return (
     <div className='App' style={estilos.contenedor}>
-      { show &&
+      {show && (
         <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
-          {dataSelfie.length === 0 && <>
-            <h1 style={estilos.titulo}>Camara Trasera</h1><br />
-            <p>Coloca tu documento de identidad dentro del recuadro para realizar la captura.</p>
-          </>}
-          {dataSelfie.length === 1 && <>
-            <h1>Camara Delantera</h1><br />
-            <p>Coloca tu documento de identidad dentro del recuadro para realizar la captura.</p>
-          </>}
-          {dataSelfie.length === 2 && <>
-            <h1>Tómate una Selfie</h1><br />
-            <p>Coloca tu rostro dentro del óvalo para realizar la captura.</p>
-          </>}
+          {dataSelfie.length === 0 && (
+            <>
+              <h1 style={estilos.titulo}>Camara Trasera</h1><br />
+              <p>Coloca tu documento de identidad dentro del recuadro para realizar la captura.</p>
+            </>
+          )}
+          {dataSelfie.length === 1 && (
+            <>
+              <h1 style={estilos.titulo}>Camara Delantera</h1><br />
+              <p>Coloca tu documento de identidad dentro del recuadro para realizar la captura.</p>
+            </>
+          )}
+          {dataSelfie.length === 2 && (
+            <>
+              <h1>Tómate una Selfie</h1><br />
+              <p>Coloca tu rostro dentro del óvalo para realizar la captura.</p>
+            </>
+          )}
   
           <div style={estilos.webcamContenedor}>
             <Webcam
-              videoConstraints={dataSelfie.length === 2 ? { facingMode: "user" } : { facingMode: "environment" }}
+              videoConstraints={dataSelfie.length === 2 ? { facingMode: 'user' } : { facingMode: 'environment' }}
               audio={false}
               ref={webcamRef}
-              screenshotFormat="image/jpeg"
+              screenshotFormat='image/jpeg'
               style={estilos.webcam}
             />
-            <div style={dataSelfie.length === 2 ? estilos.ovaloPunteadoInterno : estilos.recuadroPunteadoInterno}></div>
+            {showOverlay && (
+              <div style={dataSelfie.length === 2 ? estilos.ovaloPunteadoInterno : estilos.recuadroPunteadoInterno}></div>
+            )}
           </div><br /><br />
           <Button
-            component="label"
+            component='label'
             role={undefined}
-            variant="outlined"
+            variant='outlined'
             tabIndex={-1}
             startIcon={<CameraIcon />}
             style={estilos.botonFoto}
@@ -405,54 +451,41 @@ const ImageCropper = () => {
             Tomar foto
           </Button><br /><br /><br /><br />
         </div>
-      }
+      )}
   
-      { show2 &&
-        <div style={{ width: '100%', textAlign: 'center' }}>
-          <h1 style={{...estilos.titulo, ...estilos.colorTexto}}>Recortar foto</h1>
-          <span style={{...estilos.textoGeneral, ...estilos.colorTexto}}>
+      {show2 && (
+        <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
+          <h1 style={{ ...estilos.titulo, ...estilos.colorTexto }}>Recortar foto</h1>
+          <span style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
             Recorta la foto del documento para obtener un mejor resultado.
-          </span>
-          <br /><br />
-          <div style={{ width: '100%', height: 'auto', position: 'relative' }}>
+          </span><br /><br />
+          <div style={estilos.cropContainer}>
             <ReactCrop
               src={upImg}
-              crop={dataSelfie.length === 2 ? {
-                unit: '%',
-                x: 30,
-                y: 20,
-                width: 40,
-                height: 60
-              } : {
-                unit: '%',
-                x: 20,
-                y: 30,
-                width: 60,
-                height: 40
-              }}
+              crop={crop}
               onImageLoaded={onLoad}
-              onChange={(c) => setCrop(c)}
-              onComplete={(c) => onCropComplete(c)}
-              style={{ width: '100%', height: 'auto' }}
-            />
-            <div style={dataSelfie.length === 2 ? estilos.ovaloPunteadoInterno : estilos.recuadroPunteadoInterno}></div>
+              onChange={(newCrop) => setCrop(newCrop)}
+              onComplete={onCropComplete}
+                  style={{ maxWidth: '100%', maxHeight: '100%' }}
+
+              />
           </div>
           <Button
-            component="label"
+            component='label'
             role={undefined}
-            variant="outlined"
+            variant='outlined'
             tabIndex={-1}
             startIcon={<ContentCutIcon />}
             style={estilos.botonFoto}
-            onClick={makeClientCrop}
+            onClick={() => makeClientCrop(crop)}
           >
             Recortar Foto
           </Button>
           <span style={{ marginLeft: '20px' }}></span>
           <Button
-            component="label"
+            component='label'
             role={undefined}
-            variant="outlined"
+            variant='outlined'
             tabIndex={-1}
             startIcon={<ReplayIcon />}
             style={estilos.botonFoto}
@@ -461,52 +494,53 @@ const ImageCropper = () => {
             Repetir foto
           </Button><br /><br /><br /><br />
         </div>
-      }
-            { show3 &&
-          <div style={{ ...estilos.contenedor, ...estilos.colorTexto }}>
-            <div style={{ width: '100%', height: '15%' }}>
-              <h2 style={estilos.titulo}>Foto capturada</h2>
-              <span style={estilos.textoGeneral}>
-                Verifique la foto recortada
-                <br /><br />
-              </span>
-              <img alt="Crop" style={estilos.imagenRecortada} src={croppedImage} />
-            </div><br /><br />
-            <div>
-              <Button
-                component="label"
-                role={undefined}
-                variant="outlined"
-                tabIndex={-1}
-                startIcon={<ReplayIcon />}
-                style={estilos.botonFoto}
-                onClick={ocultarPasoTres}
-              >
-                Repetir foto
-              </Button>
-              <span style={{ marginLeft: '20px' }}></span>
-              <Button
-                component="label"
-                role={undefined}
-                variant="outlined"
-                tabIndex={-1}
-                startIcon={<CheckCircleOutlineIcon />}
-                style={estilos.botonFoto}
-                onClick={pasoSiguiente}
-              >
-                Continuar
-              </Button><br /><br /><br /><br />
-            </div>
-          </div>
-        }
+      )}
   
-        { show4 && <>
-          <div style={{ ...estilos.contenedor, ...estilos.colorTexto }}>
-            <h1 style={estilos.titulo}>{carga}</h1>
+      {show3 && (
+        <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
+          <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
+            <h2 style={estilos.titulo}>Foto capturada</h2>
+            <span style={estilos.textoGeneral}>
+              Verifique la foto recortada
+              <br /><br />
+            </span>
+            <img alt='Crop' style={estilos.imagenRecortada} src={croppedImage} />
+          </div><br /><br />
+          <div>
+            <Button
+              component='label'
+              role={undefined}
+              variant='outlined'
+              tabIndex={-1}
+              startIcon={<ReplayIcon />}
+              style={estilos.botonFoto}
+              onClick={ocultarPasoTres}
+            >
+              Repetir foto
+            </Button>
+            <span style={{ marginLeft: '20px' }}></span>
+            <Button
+              component='label'
+              role={undefined}
+              variant='outlined'
+              tabIndex={-1}
+              startIcon={<CheckCircleOutlineIcon />}
+              style={estilos.botonFoto}
+              onClick={pasoSiguiente}
+            >
+              Continuar
+            </Button><br /><br /><br /><br />
           </div>
-        </>}
-      </div>
-    );
-  }
+        </div>
+      )}
   
+      {show4 && (
+        <div style={{ ...estilos.contenedor, ...estilos.colorTexto }}>
+          <h1 style={estilos.titulo}>{carga}</h1>
+        </div>
+      )}
+    </div>
+  );
+   
+};
 export default ImageCropper;
