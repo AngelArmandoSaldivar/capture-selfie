@@ -1,6 +1,10 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import ReactCrop from 'react-image-crop';
 import Webcam from 'react-webcam';
+
+import 'react-image-crop/dist/ReactCrop.css';
+
+
 import 'react-image-crop/dist/ReactCrop.css';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '@mui/material/Button';
@@ -17,6 +21,9 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';//Siguiente
 import ContentCutIcon from '@mui/icons-material/ContentCut'; //Tijeras
 import ReplayIcon from '@mui/icons-material/Replay'; //Volver
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';//Check Continuar
+
+  //import ovalImage from './img/contorno.png'; // <- Asegúrate de que esta ruta es correcta
+  import ovalImage from './img/contorno1.png';
 
 const ImageCropper = () => {
 
@@ -285,100 +292,101 @@ const ImageCropper = () => {
       .catch((error) => console.error(error));
 
   }
-
- const estilos = {
-  contenedor: {
-    width: '100%',
-    border: '1px solid black',
-    textAlign: 'center',
-    backgroundColor: '#3f3c38',
-    fontFamily: ['Open Sans', 'Helvetica', 'sans-serif'].join(','),
-    padding: '20px',
-    boxSizing: 'border-box',
-  },
-  botonFoto: {
-    color: 'white',
-    border: '1px solid white',
-    margin: '10px 0',
-  },
-  titulo: {
-    fontSize: '2em',
-    '@media (max-width: 768px)': {
+  
+  const estilos = {
+    contenedor: {
+      width: '100%',
+      border: '1px solid black',
+      textAlign: 'center',
+      backgroundColor: '#3f3c38',
+      fontFamily: ['Open Sans', 'Helvetica', 'sans-serif'].join(','),
+      padding: '20px',
+      boxSizing: 'border-box',
+    },
+    botonFoto: {
+      color: 'white',
+      border: '1px solid white',
+      margin: '10px 0',
+    },
+    titulo: {
+      fontSize: '2em',
+      '@media (max-width: 768px)': {
+        fontSize: '1.5em',
+      },
+    },
+    subtitulo: {
+      fontSize: '1.8em',
+      '@media (max-width: 768px)': {
+        fontSize: '1.2em',
+      },
+    },
+    textoGeneral: {
       fontSize: '1.5em',
+      '@media (max-width: 768px)': {
+        fontSize: '1em',
+      },
     },
-  },
-  subtitulo: {
-    fontSize: '1.8em',
-    '@media (max-width: 768px)': {
-      fontSize: '1.2em',
+    colorTexto: {
+      color: 'white',
     },
-  },
-  textoGeneral: {
-    fontSize: '1.5em',
-    '@media (max-width: 768px)': {
-      fontSize: '1em',
+    recuadroPunteadoInterno: {
+      border: '2px dashed white',
+      position: 'absolute',
+      width: '60%',
+      height: '40%',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      pointerEvents: 'none',
+      maxWidth: '80%',
+      maxHeight: '60%',
     },
-  },
-  colorTexto: {
-    color: 'white',
-  },
-  recuadroPunteadoInterno: {
-    border: '2px dashed white',
-    position: 'absolute',
-    width: '60%',
-    height: '40%',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    pointerEvents: 'none',
-    maxWidth: '80%',
-    maxHeight: '60%',
-  },
-  ovaloPunteadoInterno: {
-    border: '2px dashed white',
-    borderRadius: '50%',
-    position: 'absolute',
-    width: '40%',
-    height: '60%',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    pointerEvents: 'none',
-    maxWidth: '60%',
-    maxHeight: '70%',
-  },
-  webcamContenedor: {
-    position: 'relative',
-    width: '100%',
-    height: 'auto',
-    marginBottom: '20px',
-  },
-  webcam: {
-    width: '100%',
-    height: 'auto',
-  },
-  imagenRecortada: {
-    width: '200%',
-    height: 'auto',
-    maxWidth: '100%',
-    maxHeight: '500px',
-  },
-};
+    imagenOvalada: {
+      position: 'absolute',
+      width: '90%', // Aumentar tamaño
+      height: '100%', // Aumentar tamaño
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      pointerEvents: 'none',
+      maxWidth: '1000%', // Ajuste máximo
+      maxHeight: '100%', // Ajuste máximo
+    },
+    webcamContenedor: {
+      position: 'relative',
+      width: '100%',
+      height: 'auto',
+      marginBottom: '20px',
+    },
+    webcam: {
+      width: '100%',
+      height: 'auto',
+    },
+    imagenRecortada: {
+      width: '100%',
+      height: 'auto',
+      maxWidth: '100%',
+      maxHeight: '500px',
+    },
+    p:{
+      fontSize:"20px",
+    },
+  };
 
 return (
   <div className='App' style={estilos.contenedor}>
     { show &&
-      <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
+      <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto, ...estilos.p }}>
         {dataSelfie.length === 0 && <>
-          <h1 style={estilos.titulo}>Camara Trasera</h1><br />
+          <h1 style={estilos.titulo}>Camara Trasera</h1>
           <p>Coloca tu documento de identidad dentro del recuadro para realizar la captura.</p>
         </>}
         {dataSelfie.length === 1 && <>
-          <h1>Camara Delantera</h1><br />
+          <h1>Camara Delantera</h1>
           <p>Coloca tu documento de identidad dentro del recuadro para realizar la captura.</p>
         </>}
         {dataSelfie.length === 2 && <>
-          <h1>Tómate una Selfie</h1><br />
+          <h1>Tómate una Selfie</h1>
           <p>Coloca tu rostro dentro del óvalo para realizar la captura.</p>
         </>}
 
@@ -390,8 +398,15 @@ return (
             screenshotFormat="image/jpeg"
             style={estilos.webcam}
           />
-          <div style={dataSelfie.length === 2 ? estilos.ovaloPunteadoInterno : estilos.recuadroPunteadoInterno}></div>
-        </div><br /><br />
+ {dataSelfie.length === 2 ? (
+              <img src={ovalImage} alt="Oval overlay" style={estilos.imagenOvalada} />
+            ) : (
+              <div style={estilos.recuadroPunteadoInterno}></div>
+            )}
+          
+  
+
+        </div>
         <Button
           component="label"
           role={undefined}
@@ -402,17 +417,17 @@ return (
           onClick={onSelectFile}
         >
           Tomar foto
-        </Button><br /><br /><br /><br />
+        </Button>
       </div>
     }
 
     { show2 &&
       <div style={{ width: '100%', textAlign: 'center' }}>
-        <h1 style={{...estilos.titulo, ...estilos.colorTexto}}>Recortar foto</h1>
-        <span style={{...estilos.textoGeneral, ...estilos.colorTexto}}>
-          Recorta la foto del documento para obtener un mejor resultado.
+        <h1 style={{...estilos.titulo, ...estilos.colorTexto }}>Recortar foto</h1>
+        <span style={{...estilos.textoGeneral, ...estilos.colorTexto, ...estilos.p}}>
+        <p>Recorta la foto del documento para obtener un mejor resultado.</p>
         </span>
-        <br /><br />
+      
         <div style={{ width: '100%', height: 'auto', position: 'relative' }}>
           <ReactCrop
             src={upImg}
@@ -434,7 +449,12 @@ return (
             onComplete={(c) => onCropComplete(c)}
             style={{ width: '100%', height: 'auto' }}
           />
-          <div style={dataSelfie.length === 2 ? estilos.ovaloPunteadoInterno : estilos.recuadroPunteadoInterno}></div>
+            {dataSelfie.length === 2 ? (
+              <img src={ovalImage} alt="Oval overlay" style={estilos.imagenOvalada} />
+            ) : (
+              <div style={estilos.recuadroPunteadoInterno}></div>
+            )}
+       
         </div>
         <Button
           component="label"
@@ -458,19 +478,18 @@ return (
           onClick={ocultarPasoUno}
         >
           Repetir foto
-        </Button><br /><br /><br /><br />
+        </Button>
       </div>
     }
           { show3 &&
         <div style={{ ...estilos.contenedor, ...estilos.colorTexto }}>
           <div style={{ width: '100%', height: '15%' }}>
             <h2 style={estilos.titulo}>Foto capturada</h2>
-            <span style={estilos.textoGeneral}>
-              Verifique la foto recortada
-              <br /><br />
+            <span style={{...estilos.textoGeneral, ...estilos.p }}>
+            <p>Verifique la foto recortada </p>
             </span>
             <img alt="Crop" style={estilos.imagenRecortada} src={croppedImage} />
-          </div><br /><br />
+          </div>
           <div>
             <Button
               component="label"
@@ -494,7 +513,7 @@ return (
               onClick={pasoSiguiente}
             >
               Continuar
-            </Button><br /><br /><br /><br />
+            </Button><br />
           </div>
         </div>
       }
