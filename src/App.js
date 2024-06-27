@@ -30,7 +30,8 @@ const ImageCropper = () => {
   const [show3, setShow3] = useState(false);
   const [show4, setShow4] = useState(false);
   const [dataSelfie, setDataSelfie] = useState([]);
-  const [crop, setCrop] = useState({ unit: '%', x: 20, y: 30, width: 60, height: 40, aspect: 3 / 2 });
+  const [selfieCrop, setSelfieCrop] = useState({ unit: '%', x: 20, y: 10, width: 50, height: 80, aspect: 3 / 4 });
+  const [crop, setCrop] = useState({ unit: '%', x: 20, y: 30, width: 75, height: 40, aspect: 3 / 2 });
   const [croppedImage, setCroppedImage] = useState('null');
   const [showOverlay, setShowOverlay] = useState(true);
   const [src, setSrc] = useState(null);
@@ -366,7 +367,7 @@ const ImageCropper = () => {
     recuadroPunteadoInterno: {
       border: '2px dashed white', 
       position: 'absolute',
-      width: '60%',
+      width: '75%',
       height: '40%',
       top: '50%',
       left: '50%',
@@ -377,14 +378,14 @@ const ImageCropper = () => {
     },
     imagenOvalada: {
       position: 'absolute',
-      width: '90%', // Aumentar tamaño
-      height: '100%', // Aumentar tamaño
+      width: '90%', 
+      height: '100%', 
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
       pointerEvents: 'none',
-      maxWidth: '1000%', // Ajuste máximo
-      maxHeight: '100%', // Ajuste máximo
+      maxWidth: '1000%', 
+      maxHeight: '100%', 
     },
     '@media (min-width: 769px) and (max-width: 1024px)': {
       width: '85vw',
@@ -425,6 +426,13 @@ const ImageCropper = () => {
       borderRadius: '10px',
       overflow: 'hidden',
       boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    },
+    buttonContainer: {
+      display: 'flex',
+      flexDirection: 'column', 
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: '.5px', 
     },
   };
 
@@ -484,23 +492,24 @@ const ImageCropper = () => {
         </div>
       )}
   
-      {show2 && (
-        <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
-          <h1 style={{ ...estilos.titulo, ...estilos.colorTexto }}>Recortar foto</h1>
-          <span style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
-            Recorta la foto del documento para obtener un mejor resultado.
-          </span><br /><br />
-          <div style={estilos.cropContainer}>
-            <ReactCrop
-              src={upImg}
-              crop={crop}
-              onImageLoaded={onLoad}
-              onChange={(newCrop) => setCrop(newCrop)}
-              onComplete={onCropComplete}
-              style={{ maxWidth: '100%', maxHeight: '100%' }}
-
-              />
-          </div>
+{show2 && (
+  <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
+    <h1 style={{ ...estilos.titulo, ...estilos.colorTexto }}>Recortar foto</h1>
+    <span style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
+      Recorta la foto del documento para obtener un mejor resultado.
+    </span><br /><br />
+    <div style={estilos.cropContainer}>
+      <ReactCrop
+        src={upImg}
+        crop={dataSelfie.length === 2 ? selfieCrop : crop}
+        onImageLoaded={onLoad}
+        onChange={(newCrop) => dataSelfie.length === 2 ? setSelfieCrop(newCrop) : setCrop(newCrop)}
+        onComplete={onCropComplete}
+        style={{ maxWidth: '100%', maxHeight: '100%' }}
+      />
+    </div>
+    <br />
+    <div style={estilos.buttonContainer}>
           <Button
             component='label'
             role={undefined}
@@ -508,7 +517,7 @@ const ImageCropper = () => {
             tabIndex={-1}
             startIcon={<ContentCutIcon />}
             style={estilos.botonFoto}
-            onClick={() => makeClientCrop(crop)}
+            onClick={() => makeClientCrop(dataSelfie.length === 2 ? selfieCrop : crop)}
           >
             Recortar Foto
           </Button>
@@ -525,7 +534,8 @@ const ImageCropper = () => {
             Repetir foto
           </Button><br /><br /><br /><br />
         </div>
-      )}
+      </div>
+    )}
   
       {show3 && (
         <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
@@ -537,8 +547,8 @@ const ImageCropper = () => {
             </span>
             <img alt='Crop' style={estilos.imagenRecortada} src={croppedImage} />
           </div><br /><br />
-          <div>
-            <Button
+          <div style={estilos.buttonContainer}>
+          <Button
               component='label'
               role={undefined}
               variant='outlined'
