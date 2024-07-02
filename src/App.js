@@ -167,22 +167,7 @@ const ImageCropper = () => {
     }
   }
 
-
-  function prueba() {
-    return "Hola";
-  }
-  
-  // Función para generar un identificador único
-  function generarIdentificadorUnico() {
-    return uuidv4();
-  }
-
   var pruebaVida = async (dataSelfie) => {
-
-    const token = await fetch("https://server-capture-selfie-b01dd8c9a312.herokuapp.com/getToken")
-                        .then((response) => response.text());
-
-    console.log("TOKEN ACCESO PRUEBA VIDA: " + token);
 
     //************
     //************
@@ -194,13 +179,11 @@ const ImageCropper = () => {
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", "Bearer" + " " + token);
 
-    const raw = JSON.stringify({
-      "id": generarIdentificadorUnico(),
-      "frontImage": ineBack,
-      "backImage": ineFront,
-      "faceImage": selfie
+    const raw = JSON.stringify({      
+      "ineFront": ineBack,
+      "ineBack": ineFront,
+      "selfie": selfie
     });
     
     const requestOptions = {
@@ -210,93 +193,25 @@ const ImageCropper = () => {
       redirect: "follow"
     };
 
-    fetch("https://veridocid.azure-api.net/api/id/v3/verify", requestOptions)
+    console.log("FOTOS: " + raw);
+
+    setCarga("Verificación facial en curso \n Espera un momento...")    
+    //fetch("localhost:5000/app/verificacion", requestOptions)
+    
+    fetch("https://server-capture-selfie-d4c65bd43858.herokuapp.com/app/verificacion", requestOptions)
     .then((response) => response.text())
     .then((result) => {
-      console.log("TOKEN 2: " + token);
-      console.log("=====ENTRASTE A VERIFICACION DOCUMENTO======");
       console.log("RESULT: " + result);
-      setCarga('Espere mientras se verifica tu información...');
-
-      setTimeout(() => {
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", "Bearer" + " " + token);
-
-        const raw = JSON.stringify({
-          "uuid": result,
-          "includeImages": false
-        });
-
-        const requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: raw,
-          redirect: "follow"
-        };        
-
-        fetch("https://veridocid.azure-api.net/api/id/v3/results", requestOptions)
-          .then((response) => response.text())
-          .then((result) => {
-            if(!result.identifier) {              
-              setTimeout(() => {
-                fetch("https://veridocid.azure-api.net/api/id/v3/results", requestOptions)
-                .then((response) => response.text())
-                .then((result) => {
-                  if(!result.identifier) {
-                    setTimeout(() => {
-                      fetch("https://veridocid.azure-api.net/api/id/v3/results", requestOptions)
-                      .then((response) => response.text())
-                      .then((result) => {
-                        setCarga('Datos enviados con exito!');
-                        crearCustomer(result);
-                      })
-                    }, 20000);
-                  } else {
-                    setCarga('Datos enviados con exito!');
-                    crearCustomer(result);
-                  }
-                })
-              }, 20000);
-            } else {
-              setCarga('Datos enviados con exito!');
-              crearCustomer(result);
-            }
-          })
-          .catch((error) => console.error(error));
-      }, 20000);
-                  
-    })    
+      if(result != 'El customer fue registrado') {
+        setCarga("No se pudo verificar tu identidad :(")
+      } else {
+        setCarga("Verificación de identidad exitosa :)")
+      }
+    })
     .catch((error) => console.error(error));
-   
-  }
-
-  function crearCustomer(customer) {
-   
-    const myHeaders = new Headers();
-    myHeaders.append("Content-type", "application/json");
-    myHeaders.append("Authorization", "OAuth realm=\"9323217\",oauth_consumer_key=\"6909223765d68229f521ae5355031e937bc39ff684ce9a38ca644f8c9929bf1a\",oauth_token=\"5e39a16ee321f9fab4d635bc694decb02b470de42e13c362d5f0f9b8a6b8b471\",oauth_signature_method=\"HMAC-SHA256\",oauth_timestamp=\"1713912081\",oauth_nonce=\"6Tu5El2vtpR\",oauth_version=\"1.0\",oauth_signature=\"WRW4XjcugcHH2ZvVCG4fvedjR38cGU48o52pw0aTC2E%3D\"");
-    myHeaders.append("Cookie", "_abck=6D4A99472AEB74D57807B05C3A17AEDB~-1~YAAQT8X3vQ9lDPOOAQAASPMV+AsVpjjapbj7mcumlFM2pZPpqIkbiUbGehCqxvzPkEJWsq8yYJw9JplexuTsWQ//ihXsGyr+rDVytKoTJaqIKgVjMIHBZRG505cwIIYYG1+vE9MXYv145n/K/Jv3b71L1xG3fUJTHe6+hJuFWbKcorIQMg47R1Kd0N3SVHuzN83qR33eyVWma8XS5D5MoYGO7oKVlkE2cRoAmDkyAbgX6nBywfgLbOaEC6g8/AFU8RLiA/dPrqqpxfIzUwKji9WeSBqEAnPH6kI9hg7NpBl+DFbtdiLqLq0KmfJnwxIiPC/8iYcWBXWP/VPtzQTCfFaDn8v4Vqy+/kbjvt/l+dZtb1HT9NlI2lVAUL24jWLQSZgeP5HciwFh~-1~-1~-1");
-
-    const raw = JSON.stringify({
-      "nombre": "123"
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-      mode: 'cors'
-    };
-
-    fetch("https://9323217.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=383&deploy=1&123", requestOptions)
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.error(error));
 
   }
-  
+
   const estilos = {
     contenedor: {
       width: '100%',
@@ -333,7 +248,7 @@ const ImageCropper = () => {
       color: 'white', 
       padding: '10px',
       borderRadius: '5px',
-      '@media (max-width: 768px)': {
+      '@media (maxWidth: 768px)': {
         fontSize: '1.5em',
       }
     },
@@ -344,7 +259,7 @@ const ImageCropper = () => {
       color: 'white', 
       padding: '10px',
       borderRadius: '5px',
-      '@media (max-width: 768px)': {
+      '@media (maxWidth: 768px)': {
         fontSize: '1.2em',
       },
       margin: '10px 0',
@@ -361,7 +276,7 @@ const ImageCropper = () => {
       color: '#333', 
       padding: '10px',
       borderRadius: '5px',
-      '@media (max-width: 768px)': {
+      '@media (maxWidth: 768px)': {
         fontSize: '1em',
       },
     },
@@ -385,10 +300,10 @@ const ImageCropper = () => {
       left: '50%',
       transform: 'translate(-50%, -50%)',
       pointerEvents: 'none',
-      maxWidth: '1000%', // Ajuste máximo
+      maxWidth: '100%', // Ajuste máximo
       maxHeight: '100%', // Ajuste máximo
     },
-    '@media (min-width: 769px) and (max-width: 1024px)': {
+    '@media (min-width: 769px) and (maxWidth: 1024px)': {
       width: '85vw',
       height: '95vh',
     },
