@@ -283,7 +283,7 @@ const ImageCropper = () => {
     recuadroPunteadoInterno: {
       border: '2px dashed white', 
       position: 'absolute',
-      width: '60%',
+      width: '75%',
       height: '40%',
       top: '50%',
       left: '50%',
@@ -342,6 +342,13 @@ const ImageCropper = () => {
       borderRadius: '10px',
       overflow: 'hidden',
       boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    },
+    buttonContainer: {
+      display: 'flex',
+      flexDirection: 'column', 
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: '.5px', 
     },
   };
 
@@ -445,7 +452,7 @@ const ImageCropper = () => {
             Repetir foto
           </Button></center>
         </div>
-      )}
+    )}
   
       {show3 && (
         <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
