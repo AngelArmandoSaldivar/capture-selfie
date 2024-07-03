@@ -32,8 +32,8 @@ const ImageCropper = () => {
   const [show3, setShow3] = useState(false);
   const [show4, setShow4] = useState(false);
   const [dataSelfie, setDataSelfie] = useState([]);
-  const [crop, setCrop] = useState({ unit: '%', x: 20, y: 30, width: 60, height: 40, aspect: 3 / 2 });
-  const [croppedImage, setCroppedImage] = useState('null');
+  const [selfieCrop, setSelfieCrop] = useState({ unit: '%', x: 27, y: 10, width: 50, height: 80, aspect: 3 / 4 });
+  const [crop, setCrop] = useState({ unit: '%', x: 20, y: 30, width: 75, height: 40, aspect: 3 / 2 });  const [croppedImage, setCroppedImage] = useState('null');
   const [showOverlay, setShowOverlay] = useState(true);
   const [src, setSrc] = useState(null);
   const [cropWidth, setCropWidth] = useState('');
@@ -203,9 +203,9 @@ const ImageCropper = () => {
     .then((result) => {
       console.log("RESULT: " + result);
       if(result != 'El customer fue registrado') {
-        setCarga("No se pudo verificar tu identidad :(")
+        setCarga("No se pudo verificar tu identidad 🙁")
       } else {
-        setCarga("Verificación de identidad exitosa :)")
+        setCarga("Verificación de identidad exitosa 🙂")
       }
     })
     .catch((error) => console.error(error));
@@ -272,7 +272,7 @@ const ImageCropper = () => {
       fontSize: '1em',
       lineHeight: '1.5',
       margin: '10px 0',
-      backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+      backgroundColor: 'rgba(255, 255, 255, 0.😎', 
       color: '#333', 
       padding: '10px',
       borderRadius: '5px',
@@ -351,13 +351,13 @@ const ImageCropper = () => {
         <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
           {dataSelfie.length === 0 && (
             <>
-              <h1 style={estilos.titulo}>Camara Trasera</h1><br />
+              <h1 style={estilos.titulo}>Identificacion parte Trasera</h1><br />
               <p>Coloca tu documento de identidad dentro del recuadro para realizar la captura.</p>
             </>
           )}
           {dataSelfie.length === 1 && (
             <>
-              <h1 style={estilos.titulo}>Camara Delantera</h1><br />
+              <h1 style={estilos.titulo}>Identificacion parte Delantera</h1><br />
               <p>Coloca tu documento de identidad dentro del recuadro para realizar la captura.</p>
             </>
           )}
@@ -386,7 +386,8 @@ const ImageCropper = () => {
               <div style={estilos.recuadroPunteadoInterno}></div>
             )}
  
-          </div><br /><br />
+          </div>
+          <span style={{ marginLeft: '0px' }}></span>
           <center> <Button
             component='label'
             role={undefined}
@@ -397,7 +398,7 @@ const ImageCropper = () => {
             onClick={onSelectFile}
           >
             Tomar foto
-          </Button></center><br /><br />
+          </Button></center>
         </div>
       )}
   
@@ -410,9 +411,9 @@ const ImageCropper = () => {
           <div style={estilos.cropContainer}>
             <ReactCrop
               src={upImg}
-              crop={crop}
+              crop={dataSelfie.length === 2 ? selfieCrop : crop}
               onImageLoaded={onLoad}
-              onChange={(newCrop) => setCrop(newCrop)}
+              onChange={(newCrop) => dataSelfie.length === 2 ? setSelfieCrop(newCrop) : setCrop(newCrop)}
               onComplete={onCropComplete}
               style={{ maxWidth: '100%', maxHeight: '100%' }}
 
@@ -426,11 +427,11 @@ const ImageCropper = () => {
             tabIndex={-1}
             startIcon={<ContentCutIcon />}
             style={estilos.botonFoto}
-            onClick={() => makeClientCrop(crop)}
-          >
+            onClick={() => makeClientCrop(dataSelfie.length === 2 ? selfieCrop : crop)}
+            >
             Recortar Foto
           </Button></center>
-          <span style={{ marginLeft: '20px' }}></span>
+          <span style={{ marginLeft: '0px' }}></span>
           <center>
           <Button
             component='label'
@@ -442,7 +443,7 @@ const ImageCropper = () => {
             onClick={ocultarPasoUno}
           >
             Repetir foto
-          </Button></center><br /><br />
+          </Button></center>
         </div>
       )}
   
@@ -452,10 +453,9 @@ const ImageCropper = () => {
             <h2 style={estilos.titulo}>Foto capturada</h2>
             <span style={estilos.textoGeneral}>
               Verifique la foto recortada
-              <br /><br />
             </span>
             <img alt='Crop' style={estilos.imagenRecortada} src={croppedImage} />
-          </div><br /><br />
+          </div>
           <div>
           <center><Button
               component='label'
@@ -467,8 +467,9 @@ const ImageCropper = () => {
               onClick={ocultarPasoTres}
             >
               Repetir foto
+              <span style={{ marginLeft: '0px' }}></span>
             </Button></center>
-            <span style={{ marginLeft: '20px' }}></span>
+            <span style={{ marginLeft: '0px' }}></span>
             <center><Button
               component='label'
               role={undefined}
@@ -479,7 +480,7 @@ const ImageCropper = () => {
               onClick={pasoSiguiente}
             >
               Continuar
-            </Button></center><br /><br />
+            </Button></center>
           </div>
         </div>
       )}
