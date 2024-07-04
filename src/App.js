@@ -358,13 +358,13 @@ const ImageCropper = () => {
         <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
           {dataSelfie.length === 0 && (
             <>
-              <h1 style={estilos.titulo}>Identificacion parte Trasera</h1><br />
+              <h1 style={estilos.titulo}>Identificacion parte Delantera</h1><br />
               <p>Coloca tu documento de identidad dentro del recuadro para realizar la captura.</p>
             </>
           )}
           {dataSelfie.length === 1 && (
             <>
-              <h1 style={estilos.titulo}>Identificacion parte Delantera</h1><br />
+              <h1 style={estilos.titulo}>Identificacion parte Trasera</h1><br />
               <p>Coloca tu documento de identidad dentro del recuadro para realizar la captura.</p>
             </>
           )}
