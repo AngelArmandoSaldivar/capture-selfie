@@ -93,18 +93,21 @@ const ImageCropper = () => {
   }; 
 
   const getCroppedImg = (src, crop) => {
-    
-    return new Promise((resolve, reject) => {      
+    return new Promise((resolve, reject) => {
       const image = new Image();
-      image.src = src;      
+      image.src = src;
       image.onload = () => {
         const canvas = document.createElement('canvas');
-        const scaleX = image.naturalWidth / image.width;      
+        const scaleX = image.naturalWidth / image.width;
         const scaleY = image.naturalHeight / image.height;
         canvas.width = crop.width;
         canvas.height = crop.height;
         const ctx = canvas.getContext('2d');
-
+  
+        // Habilitar el suavizado de imágenes
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high'; 
+  
         ctx.drawImage(
           image,
           crop.x * scaleX,
@@ -116,24 +119,24 @@ const ImageCropper = () => {
           crop.width,
           crop.height
         );
-
+  
         canvas.toBlob((blob) => {
           const reader = new FileReader();
           reader.readAsDataURL(blob);
-          reader.onloadend = () => {   
-            //console.log("SRC: " + reader.result);  
-            setDataSelfie(dataSelfie.concat(reader.result));
+          reader.onloadend = () => {
+            setDataSelfie((prev) => [...prev, reader.result]);
             resolve(reader.result);
           };
-        }, 'image/jpeg');
+        }, 'image/jpeg', 1); // Ajuste de la calidad máxima
         setShow2(!show2);
-        setShow3(!show3)
-      };      
+        setShow3(!show3);
+      };
       image.onerror = (error) => {
         reject(error);
       };
     });
   };
+  
 
   var ocultarPasoUno = () => {
     setShow(!show);
@@ -169,11 +172,12 @@ const ImageCropper = () => {
 
   var pruebaVida = async (dataSelfie) => {
 
-    //************
-    //************
+    //**
+    //**
     //Verificador de Documentos (Prueba de vida).
 
     var ineBack = dataSelfie[0].replace(new RegExp("data:image/jpeg;base64,", "gi"), "");
+    console.log("INE: "+ ineBack);
     var ineFront = dataSelfie[1].replace(new RegExp("data:image/jpeg;base64,", "gi"), "");
     var selfie = dataSelfie[2].replace(new RegExp("data:image/jpeg;base64,", "gi"), "");
 
@@ -501,4 +505,5 @@ const ImageCropper = () => {
   );
    
 };
+
 export default ImageCropper;
