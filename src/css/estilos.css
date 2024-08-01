@@ -1,0 +1,81 @@
+/* MiComponente.css */
+.contenedor-imagen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .custom-file-upload {
+    display: inline-block;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .custom-file-upload:hover {
+    background-color: #0056b3;
+  }
+  
+  .custom-file-upload:active {
+    background-color: #004085;
+  }
+  
+  .imagenes-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .image-wrapper {
+    position: relative;
+    display: inline-block;
+    cursor: pointer; /* Cambia el cursor a una manita */
+  }
+  
+  .imagen {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    border-radius: 8px;
+    transition: opacity 0.3s;
+  }
+  
+  .image-wrapper:hover .image-overlay {
+    opacity: 1;
+  }
+
+  .textoDiv {
+    margin-top: 300px;
+    position: absolute;
+  }
+  
+  .error {
+    color: red;
+    margin-top: -15px;
+    margin-bottom: 10px;
+  }
