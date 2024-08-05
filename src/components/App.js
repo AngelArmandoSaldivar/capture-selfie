@@ -20,7 +20,7 @@
 // import ContentCutIcon from '@mui/icons-material/ContentCut'; //Tijeras
 // import ReplayIcon from '@mui/icons-material/Replay'; //Volver
 // import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';//Check Continuar
-// import ovalImage from './img/contorno1.png';
+// import ovalImage from '../img/contorno1.png';
 
 // const ImageCropper = () => {
 
@@ -508,6 +508,15 @@
 
 // export default ImageCropper;
 
+
+
+
+/**
+ * ########################################################
+ * ########################################################
+ * ########################################################
+ */
+
 import React, { useState } from 'react';
 import '../css/estilos.css';
 
@@ -611,6 +620,7 @@ const MiComponente = () => {
       .then((response) => response.text())
       .then((result) => {
         console.log("RESULTADO: " + result);
+        setCarga(result)
       })
       .catch((error) => console.error(error));
     } else {
