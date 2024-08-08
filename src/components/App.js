@@ -519,12 +519,25 @@
 
 import React, { useState } from 'react';
 import '../css/estilos.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFaceGrinWide } from '@fortawesome/free-solid-svg-icons';
+import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
+import logo from '../img/LOGO-CORE.jpg';
 
 const MiComponente = () => {
   const [imagenes, setImagenes] = useState([]);
   const [error, setError] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [carga, setCarga] = useState('');
+  const [status, setStatus] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState('');
+
+  const handleCheckboxChange = (event) => {
+    if(imagenes.length > 0) {
+      window.location.reload();
+    }
+    setSelectedDocument(event.target.value);
+  };
 
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
@@ -537,8 +550,8 @@ const MiComponente = () => {
 
     if (selectedIndex === null) {
       const totalImages = imagenes.length + validFiles.length;
-      if (totalImages > 3) {
-        setError('No se pueden cargar más de 3 imágenes.');
+      if (totalImages > 4) {
+        setError('No se pueden cargar más de 4 imágenes.');
         return;
       }
     }
@@ -568,7 +581,11 @@ const MiComponente = () => {
           });
           setSelectedIndex(null);
         } else {
-          setImagenes(prevImagenes => [...prevImagenes, ...results].slice(0, 3));
+          if(selectedDocument == 'Pasaporte') {
+            setImagenes(prevImagenes => [...prevImagenes, ...results].slice(0, 3));
+          } else {
+            setImagenes(prevImagenes => [...prevImagenes, ...results].slice(0, 4));
+          }          
         }
       })
       .catch(() => {
@@ -586,16 +603,28 @@ const MiComponente = () => {
   };
 
   const getButtonText = () => {
-    if (selectedIndex !== null) return 'Reemplazar Imagen';
-    if (imagenes.length === 0) return 'CARGAR INE FRENTE';
-    if (imagenes.length === 1) return 'CARGAR INE REVERSO';
-    if (imagenes.length === 2) return 'CARGAR SELFIE';            
-    return 'VALIDAR DOCUMENTOS';
+    if(selectedDocument == 'Pasaporte') {      
+
+      if (selectedIndex !== null) return 'Reemplazar Imagen';
+      if (imagenes.length === 0) return 'CARGAR PASAPORTE';
+      //if (imagenes.length === 1) return 'CARGAR INE REVERSO';
+      if (imagenes.length === 1) return 'CARGAR SELFIE';
+      if (imagenes.length === 2) return 'CARGAR COMPROBANTE DE DOMICILIO';
+      return 'VALIDAR DOCUMENTOS';
+
+    } else {
+      if (selectedIndex !== null) return 'Reemplazar Imagen';
+      if (imagenes.length === 0) return 'CARGAR INE FRENTE';
+      if (imagenes.length === 1) return 'CARGAR INE REVERSO';
+      if (imagenes.length === 2) return 'CARGAR SELFIE';
+      if (imagenes.length === 3) return 'CARGAR COMPROBANTE DE DOMICILIO';
+      return 'VALIDAR DOCUMENTOS';      
+    }    
   };
 
-  function validarIdentidad() {
+  function validarIdentidad() {   
     
-    if( imagenes.length === 3 ){
+    if( imagenes.length === 4 ){
 
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -603,8 +632,114 @@ const MiComponente = () => {
       const raw = JSON.stringify({
         "ineFront": imagenes[0],
         "ineBack": imagenes[1],
-        "selfie": imagenes[2]
+        "selfie": imagenes[2],
+        "comprobante": imagenes[3]
       });
+
+      console.log("JSON: " + raw);
+      
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+      };
+
+      const uuidJson = {
+        uuid: ''
+      }
+
+      console.log("FOTOS: " + raw);
+      setStatus(true);
+      setCarga("Estamos validando los documentos \n Espera un momento...")
+      //fetch("localhost:5000/app/verificacion", requestOptions)        
+      fetch("https://server-capture-selfie-d4c65bd43858.herokuapp.com/app/verificacion", requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+
+        if(result == "El customer fue registrado") {
+          setCarga("Identidad Verificada.");
+          setStatus(false);
+        } else {
+
+          console.log("ENTRASTE A DIFERENTE A CUSTOMER FUE REGISTRADO: " + result);
+          const rawGetCust = JSON.stringify({
+            "uuid": result
+          });
+          const requestOptionsCus = {
+            method: "POST",
+            headers: myHeaders,
+            body: rawGetCust,
+            redirect: "follow"
+          };
+          fetch("https://server-capture-selfie-d4c65bd43858.herokuapp.com/app/getCustomer", requestOptionsCus)
+          .then((response) => response.text())
+          .then((result) => {
+            console.log("**********ENTRASTE A GET CUSTOMER ***********");
+            console.log("RESULT: " + result);            
+            setCarga(result);
+            setStatus(false);
+          })
+          .catch((error) => console.error(error));
+
+        } 
+        return;
+        console.log("RESULTADO: " + JSON.stringify(result));
+        if(result != 'El customer fue registrado') {
+          console.log("ENTRASTE A DIFERENTE A CUSTOMER FUE REGISTRADO: " + result);
+          const rawGetCust = JSON.stringify({
+            "uuid": result
+          });
+          const requestOptionsCus = {
+            method: "POST",
+            headers: myHeaders,
+            body: rawGetCust,
+            redirect: "follow"
+          };
+          fetch("https://server-capture-selfie-d4c65bd43858.herokuapp.com/app/getCustomer", requestOptionsCus)
+          .then((response) => response.text())
+          .then((result) => {
+            console.log("**********ENTRASTE A GET CUSTOMER ***********");
+            console.log("RESULT: " + result);            
+            setCarga(result);
+            setStatus(false);
+          })
+          .catch((error) => console.error(error));
+        }
+        //setCarga(result);
+        //setStatus(false);
+        if(result == 'El customer fue registrado') {
+          setCarga("Identidad Verificada.");
+          setStatus(false);
+        } 
+        /*else if(result == 'Prueba de vida fallida Sin coincidencias'){
+          setCarga('Prueba de vida fallida, sin coincidencias');
+          setStatus(false);
+        } else if(result == 'Biometría facial no exitosa'){
+          setCarga("Biometria facial no exitosa, sin coincidencias.");
+          setStatus(false);
+        } else {
+          setCarga("No se encontraron coincidencias, vuelve a intentarlo.");
+          setStatus(false);
+        }*/
+      })
+      .catch((error) => {
+        setCarga("Verificación Facial Fallida");
+        setStatus(false);
+        console.log("ERR: " + error);
+      });
+    } else {     
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      const raw = JSON.stringify({
+        "ineFront": imagenes[0],
+        "ineBack": '',
+        "selfie": imagenes[1],
+        "comprobante": imagenes[2]
+      });
+
+      console.log("JSON: " + raw);
       
       const requestOptions = {
         method: "POST",
@@ -614,19 +749,27 @@ const MiComponente = () => {
       };
 
       console.log("FOTOS: " + raw);
-      setCarga("Verificación facial en curso \n Espera un momento...")
+      setStatus(true);
+      setCarga("Estamos validando los documentos \n Espera un momento...")
       //fetch("localhost:5000/app/verificacion", requestOptions)        
       fetch("https://server-capture-selfie-d4c65bd43858.herokuapp.com/app/verificacion", requestOptions)
       .then((response) => response.text())
       .then((result) => {
         console.log("RESULTADO: " + result);
-        setCarga(result)
+        if(result == 'El customer fue registrado') {
+          setCarga("Identidad Verificada.");
+          setStatus(false);
+        } else {
+          setCarga("No se encontraron coincidencias, vuelve a intentarlo.");
+          setStatus(false);
+        }
       })
-      .catch((error) => console.error(error));
-    } else {
-
+      .catch((error) => {
+        setCarga("Verificación Facial Fallida");
+        setStatus(false);
+        console.log("ERR: " + error);
+      });
     }
-
   }
 
   /*imagenes.map((imagen, index) => {   
@@ -634,12 +777,47 @@ const MiComponente = () => {
       console.log(imagenes);
     }    
   });*/
-
-  return (
+  return (    
     <div className="contenedor-imagen">
-      <button className="custom-file-upload" onClick={imagenes.length == 3 ? validarIdentidad : handleButtonClick}>
-        {getButtonText()}
-      </button>
+
+      <header className="header">
+        <img
+          src={logo}
+          alt="Logo"
+          className="logo"
+        />
+        <h1 className="title">Verificar Documentos</h1>
+      </header>
+
+      <div className='divTexto'>
+        <span className='nota'><b>Nota</b></span> Si seleccionas un <b> pasaporte</b>, no es necesario cargar el archivo del reverso
+      </div>
+    
+      <div className="document-selector">
+        <h3>Selecciona el tipo de documento con el que te quieres identificar</h3>
+        <div className="checkbox-group">
+          <label>
+            <input
+              type="checkbox"
+              value="documento_identidad"
+              checked={selectedDocument === 'documento_identidad'}
+              onChange={handleCheckboxChange}
+            />
+            Documento de identidad
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              value="Pasaporte"
+              checked={selectedDocument === 'Pasaporte'}
+              onChange={handleCheckboxChange}
+            />
+            Pasaporte
+          </label>
+        </div>
+        {/* <p className="selected-document">Selected Document: {selectedDocument}</p> */}
+      </div>
+
       <input
         id="fileInput"
         type="file"
@@ -659,11 +837,32 @@ const MiComponente = () => {
           </div> <br></br></>
         ))}
         {
-          <div className='textoDiv'>
+          <div className='textoDiv'>            
             {carga}
+            { status == true ? 
+              <img
+                src="https://codigofuente.io/wp-content/uploads/2018/09/progress.gif"              
+                alt="loading"
+                style={{ width: '80px', height: '80px', marginRight: '10px' }}
+              /> : ""
+            }
           </div>
         }
       </div>
+      <br></br><br></br><br></br>
+      {selectedDocument == 'Pasaporte' ?
+      <button className="custom-file-upload" onClick={imagenes.length == 3 ? validarIdentidad : handleButtonClick}>
+        {getButtonText() + " "}
+        {imagenes.length <= 1 ? <FontAwesomeIcon icon={faAddressCard} /> : <FontAwesomeIcon icon={faFaceGrinWide} />}        
+      </button> :
+      
+      <button className="custom-file-upload" onClick={imagenes.length == 4 ? validarIdentidad : handleButtonClick}>
+        {getButtonText() + " "}
+        {imagenes.length <= 1 ? <FontAwesomeIcon icon={faAddressCard} /> : <FontAwesomeIcon icon={faFaceGrinWide} />}        
+      </button>
+      
+      }
+      
     </div>
   );
 };
