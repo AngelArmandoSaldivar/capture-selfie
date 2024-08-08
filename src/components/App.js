@@ -656,7 +656,7 @@ const MiComponente = () => {
       fetch("https://server-capture-selfie-d4c65bd43858.herokuapp.com/app/verificacion", requestOptions)
       .then((response) => response.text())
       .then((result) => {
-
+        console.log("RESULT: " + result);
         if(result == "El customer fue registrado") {
           setCarga("Identidad Verificada.");
           setStatus(false);
