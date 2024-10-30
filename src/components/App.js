@@ -103,11 +103,11 @@
 //         canvas.width = crop.width;
 //         canvas.height = crop.height;
 //         const ctx = canvas.getContext('2d');
-  
+
 //         // Habilitar el suavizado de imágenes
 //         ctx.imageSmoothingEnabled = true;
 //         ctx.imageSmoothingQuality = 'high'; 
-  
+
 //         ctx.drawImage(
 //           image,
 //           crop.x * scaleX,
@@ -119,7 +119,7 @@
 //           crop.width,
 //           crop.height
 //         );
-  
+
 //         canvas.toBlob((blob) => {
 //           const reader = new FileReader();
 //           reader.readAsDataURL(blob);
@@ -136,7 +136,7 @@
 //       };
 //     });
 //   };
-  
+
 
 //   var ocultarPasoUno = () => {
 //     setShow(!show);
@@ -189,7 +189,7 @@
 //       "ineBack": ineFront,
 //       "selfie": selfie
 //     });
-    
+
 //     const requestOptions = {
 //       method: "POST",
 //       headers: myHeaders,
@@ -201,7 +201,7 @@
 
 //     setCarga("Verificación facial en curso \n Espera un momento...")    
 //     //fetch("localhost:5000/app/verificacion", requestOptions)
-    
+
 //     fetch("https://server-capture-selfie-d4c65bd43858.herokuapp.com/app/verificacion", requestOptions)
 //     .then((response) => response.text())
 //     .then((result) => {
@@ -378,7 +378,7 @@
 //               <p>Coloca tu rostro dentro del óvalo para realizar la captura.</p>
 //             </>
 //           )}
-  
+
 //           <div style={estilos.webcamContenedor}>
 //             <Webcam
 //               videoConstraints={dataSelfie.length === 2 ? { facingMode: 'user' } : { facingMode: 'environment' }}
@@ -396,7 +396,7 @@
 //             ) : (
 //               <div style={estilos.recuadroPunteadoInterno}></div>
 //             )}
- 
+
 //           </div>
 //           <span style={{ marginLeft: '0px' }}></span>
 //           <center> <Button
@@ -412,7 +412,7 @@
 //           </Button></center>
 //         </div>
 //       )}
-  
+
 //       {show2 && (
 //         <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
 //           <h1 style={{ ...estilos.titulo, ...estilos.colorTexto }}>Recortar foto</h1>
@@ -457,7 +457,7 @@
 //           </Button></center>
 //         </div>
 //     )}
-  
+
 //       {show3 && (
 //         <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
 //           <div style={{ ...estilos.textoGeneral, ...estilos.colorTexto }}>
@@ -495,7 +495,7 @@
 //           </div>
 //         </div>
 //       )}
-  
+
 //       {show4 && (
 //         <div style={{ ...estilos.contenedor, ...estilos.colorTexto }}>
 //           <h1 style={estilos.titulo}>{carga}</h1>
@@ -503,7 +503,7 @@
 //       )}
 //     </div>
 //   );
-   
+
 // };
 
 // export default ImageCropper;
@@ -533,7 +533,7 @@ const MiComponente = () => {
   const [selectedDocument, setSelectedDocument] = useState('');
 
   const handleCheckboxChange = (event) => {
-    if(imagenes.length > 0) {
+    if (imagenes.length > 0) {
       window.location.reload();
     }
     setSelectedDocument(event.target.value);
@@ -581,11 +581,11 @@ const MiComponente = () => {
           });
           setSelectedIndex(null);
         } else {
-          if(selectedDocument == 'Pasaporte') {
+          if (selectedDocument == 'Pasaporte') {
             setImagenes(prevImagenes => [...prevImagenes, ...results].slice(0, 3));
           } else {
             setImagenes(prevImagenes => [...prevImagenes, ...results].slice(0, 4));
-          }          
+          }
         }
       })
       .catch(() => {
@@ -603,7 +603,7 @@ const MiComponente = () => {
   };
 
   const getButtonText = () => {
-    if(selectedDocument == 'Pasaporte') {      
+    if (selectedDocument == 'Pasaporte') {
 
       if (selectedIndex !== null) return 'Reemplazar Imagen';
       if (imagenes.length === 0) return 'CARGAR PASAPORTE';
@@ -618,13 +618,13 @@ const MiComponente = () => {
       if (imagenes.length === 1) return 'CARGAR INE REVERSO';
       if (imagenes.length === 2) return 'CARGAR SELFIE';
       if (imagenes.length === 3) return 'CARGAR COMPROBANTE DE DOMICILIO';
-      return 'VALIDAR DOCUMENTOS';      
-    }    
+      return 'VALIDAR DOCUMENTOS';
+    }
   };
 
-  function validarIdentidad() {   
-    
-    if( imagenes.length === 4 ){
+  function validarIdentidad() {
+
+    if (imagenes.length === 4) {
 
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -637,98 +637,131 @@ const MiComponente = () => {
       });
 
       console.log("JSON: " + raw);
-      
+
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
         body: raw,
         redirect: "follow"
       };
-
-      const uuidJson = {
-        uuid: ''
-      }
-
-      console.log("FOTOS: " + raw);
+            
       setStatus(true);
       setCarga("Estamos validando los documentos \n Espera un momento...")
-      //fetch("localhost:5000/app/verificacion", requestOptions)        
-      fetch("https://server-capture-selfie-d4c65bd43858.herokuapp.com/app/verificacion", requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        console.log("RESULT: " + result);
-        if(result == "El customer fue registrado") {
-          setCarga("Identidad Verificada.");
-          setStatus(false);
-        } else {
+      //fetch("https://biometrico-netsuite-363a74b9153d.herokuapp.com/app/verificacion", requestOptions)
+      fetch("http://localhost:5000/app/verificacion", requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+         
+          localStorage.setItem("uuid", result);
+          var uuidLocal = localStorage.getItem("uuid");
+        
+            const myHeaders2 = new Headers();
+            myHeaders2.append("Content-Type", "application/json");
 
-          console.log("ENTRASTE A DIFERENTE A CUSTOMER FUE REGISTRADO: " + result);
-          const rawGetCust = JSON.stringify({
-            "uuid": result
-          });
-          const requestOptionsCus = {
-            method: "POST",
-            headers: myHeaders,
-            body: rawGetCust,
-            redirect: "follow"
-          };
-          fetch("https://server-capture-selfie-d4c65bd43858.herokuapp.com/app/getCustomer", requestOptionsCus)
-          .then((response) => response.text())
-          .then((result) => {
-            console.log("**********ENTRASTE A GET CUSTOMER ***********");
-            console.log("RESULT: " + result);            
-            setCarga(result);
-            setStatus(false);
-          })
-          .catch((error) => console.error(error));
+            const RawUuid = JSON.stringify({
+              "uuid": uuidLocal
+            });
 
-        } 
-        return;
-        console.log("RESULTADO: " + JSON.stringify(result));
-        if(result != 'El customer fue registrado') {
-          console.log("ENTRASTE A DIFERENTE A CUSTOMER FUE REGISTRADO: " + result);
-          const rawGetCust = JSON.stringify({
-            "uuid": result
-          });
-          const requestOptionsCus = {
-            method: "POST",
-            headers: myHeaders,
-            body: rawGetCust,
-            redirect: "follow"
-          };
-          fetch("https://server-capture-selfie-d4c65bd43858.herokuapp.com/app/getCustomer", requestOptionsCus)
-          .then((response) => response.text())
-          .then((result) => {
-            console.log("**********ENTRASTE A GET CUSTOMER ***********");
-            console.log("RESULT: " + result);            
-            setCarga(result);
+            const requestOptionsCus = {
+              method: "POST",
+              headers: myHeaders2,
+              body: RawUuid,
+              redirect: "follow"
+            };
+      
+            if(result) {
+            
+              async function waitForUuid() {
+                let uuid = null;              
+                var contador = 1;
+
+                //VERIFICACIÓN SI EXISTE EL CLIENTE Y DESPUES LO REGISTRA
+                while (!uuid) {
+                  contador ++;                 
+                  try {
+                    
+                    const response = await fetch("http://127.0.0.1:5000/app/getCustomer", requestOptionsCus);
+                    //const response = await fetch("https://biometrico-netsuite-363a74b9153d.herokuapp.com/app/getCustomer", requestOptionsCus);
+                    const result2 = await response.text();
+                    console.log("##########################");
+                    console.log("RESULT: " + JSON.parse(result2).identifier);
+                    console.log("##########################");
+                    if(JSON.parse(result2).identifier) {
+
+                      console.log("################ ENTRASTE ####################");
+
+                      const rawCus = JSON.stringify({
+                        client_body: result2,
+                        comprobante: imagenes[3],
+                        ineFront: imagenes[0],
+                        ineBack: imagenes[1],
+                        selfie: imagenes[2]
+                      });
+          
+                      const requestCusRegister = {
+                        method: "POST",
+                        headers: myHeaders,
+                        body: rawCus,
+                        redirect: "follow"
+                      };                        
+
+                      fetch("http://127.0.0.1:5000/app/verificacion", requestCusRegister)
+                      //fetch("https://biometrico-netsuite-363a74b9153d.herokuapp.com/app/verificacion", requestCusRegister)
+                      .then((response) => response.text())
+                      .then((resultCus) => {
+                        
+                          console.log("IDENTIFIER: " + JSON.parse(result2).identifier);
+                          
+                          if(JSON.parse(result2).identifier != null) {
+
+                              localStorage.removeItem("uuid");
+                              setStatus(false);
+                              setCarga(resultCus)
+                          }
+                          console.log("RESP: " + resultCus);
+                          uuid = JSON.parse(result2).identifier;
+                      })
+                      .catch(err => {
+                        console.log("ERROR: " + err);
+                      })
+                      return JSON.parse(result2).identifier;
+                    } else {
+                      console.log("UUID: " + result2.uuid);
+                      console.log("Entraste no existe");
+                      await new Promise(resolve => setTimeout(resolve, 2000));
+                    }
+
+                  } catch (error) {
+                    console.error('Error al hacer la solicitud a la API:', error.message);
+                    setCarga('Error al hacer la solicitud.');
+                    setStatus(false);
+                    await new Promise(resolve => setTimeout(resolve, 2000)); // Espera 1 segundo antes de la próxima verificación
+                  }
+                }                
+                return uuid;
+              }
+              waitForUuid().then(uuid => {
+                if(uuid != null) {
+                  console.log("Entraste uuid: " + uuid);
+                } else {
+                  console.log("AUN CARGANDO: " + uuid);
+                }
+
+              }).catch(err => {
+                setCarga(err);
+                setStatus(false);
+              });
+
+            }
+          })          
+          .catch((error) => {
+            setCarga("Verificación Facial Fallida");
             setStatus(false);
-          })
-          .catch((error) => console.error(error));
-        }
-        //setCarga(result);
-        //setStatus(false);
-        if(result == 'El customer fue registrado') {
-          setCarga("Identidad Verificada.");
-          setStatus(false);
-        } 
-        /*else if(result == 'Prueba de vida fallida Sin coincidencias'){
-          setCarga('Prueba de vida fallida, sin coincidencias');
-          setStatus(false);
-        } else if(result == 'Biometría facial no exitosa'){
-          setCarga("Biometria facial no exitosa, sin coincidencias.");
-          setStatus(false);
-        } else {
-          setCarga("No se encontraron coincidencias, vuelve a intentarlo.");
-          setStatus(false);
-        }*/
-      })
-      .catch((error) => {
-        setCarga("Verificación Facial Fallida");
-        setStatus(false);
-        console.log("ERR: " + error);
-      });
-    } else {     
+            console.log("ERR: " + error);
+          });
+    
+
+    } else {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 
@@ -740,7 +773,7 @@ const MiComponente = () => {
       });
 
       console.log("JSON: " + raw);
-      
+
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
@@ -751,24 +784,110 @@ const MiComponente = () => {
       console.log("FOTOS: " + raw);
       setStatus(true);
       setCarga("Estamos validando los documentos \n Espera un momento...")
-      //fetch("localhost:5000/app/verificacion", requestOptions)        
-      fetch("https://server-capture-selfie-d4c65bd43858.herokuapp.com/app/verificacion", requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        console.log("RESULTADO: " + result);
-        if(result == 'El customer fue registrado') {
-          setCarga("Identidad Verificada.");
-          setStatus(false);
-        } else {
-          setCarga("No se encontraron coincidencias, vuelve a intentarlo.");
-          setStatus(false);
-        }
-      })
-      .catch((error) => {
-        setCarga("Verificación Facial Fallida");
-        setStatus(false);
-        console.log("ERR: " + error);
-      });
+      fetch("http://127.0.0.1:5000/app/verificacion", requestOptions)
+      //fetch("https://biometrico-netsuite-363a74b9153d.herokuapp.com/app/verificacion", requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+        
+            const myHeaders2 = new Headers();
+            myHeaders2.append("Content-Type", "application/json");
+
+            const raw = JSON.stringify({
+              "uuid": result
+            });
+
+            const requestOptionsCus = {
+              method: "POST",
+              headers: myHeaders2,
+              body: raw,
+              redirect: "follow"
+            };
+      
+            if(result) {
+            
+              async function waitForUuid() {                  
+                let uuid = null;
+                console.log("ENTRASTE *************");
+                console.log("Entraste ************** " + JSON.stringify(requestOptionsCus));
+                var contador = 1;
+                while (!uuid) {
+                  contador ++;                 
+                  try {                    
+                    //const response = await fetch("http://127.0.0.1:5000/app/getCustomer", requestOptionsCus);
+                    const response = await fetch("https://biometrico-netsuite-363a74b9153d.herokuapp.com/app/getCustomer", requestOptionsCus);
+                    const result2 = await response.text();
+                    //result2 = JSON.stringify(result2);
+                    console.log("##########################");
+                    console.log("RESULT: " + JSON.parse(result2).identifier);
+                    console.log("##########################");
+                    if(JSON.parse(result2).identifier) {
+
+                      const rawCus = JSON.stringify({
+                        client_body: result2,
+                        comprobante: imagenes[2],
+                        ineFront: imagenes[0],
+                        ineBack: '',
+                        selfie: imagenes[1]
+                      });
+          
+                      const requestCusRegister = {
+                        method: "POST",
+                        headers: myHeaders,
+                        body: rawCus,
+                        redirect: "follow"
+                      };                        
+
+                      //fetch("http://127.0.0.1:5000/app/verificacion", requestCusRegister)
+                      fetch("https://biometrico-netsuite-363a74b9153d.herokuapp.com/app/verificacion", requestCusRegister)
+                      .then((response) => response.text())
+                      .then((resultCus) => {
+                        
+                          if(JSON.parse(result2).identifier != null) {
+                              localStorage.removeItem("uuid");
+                              setStatus(false);
+                              setCarga(resultCus)                            
+                          }
+                          console.log("RESP: " + resultCus);
+                          uuid = JSON.parse(result2).identifier;
+                      })
+                      .catch(err => {
+                        console.log("ERROR: " + err);
+                      })
+                      return JSON.parse(result2).identifier;
+                    } else {
+                      console.log("UUID: " + result2.uuid);                      
+                      await new Promise(resolve => setTimeout(resolve, 2000));
+                    }                    
+
+                  } catch (error) {
+                    console.error('Error al hacer la solicitud a la API:', error.message);
+                    setCarga('Error al hacer la solicitud.');
+                    setStatus(false);
+                    await new Promise(resolve => setTimeout(resolve, 2000)); // Espera 1 segundo antes de la próxima verificación
+                  }
+                }                
+                return uuid;   
+              }
+              
+              waitForUuid().then(uuid => {
+                if(uuid != null) {
+                  console.log("Entraste uuid: " + uuid);                 
+                } else {
+                  console.log("AUN CARGANDO: " + uuid);                  
+                }
+
+              }).catch(err => {
+                setCarga(err);
+                setStatus(false);
+              });
+
+            }
+          })          
+          .catch((error) => {
+            setCarga("Verificación Facial Fallida");
+            setStatus(false);
+            console.log("ERR: " + error);
+          });
     }
   }
 
@@ -777,7 +896,7 @@ const MiComponente = () => {
       console.log(imagenes);
     }    
   });*/
-  return (    
+  return (
     <div className="contenedor-imagen">
 
       <header className="header">
@@ -792,7 +911,7 @@ const MiComponente = () => {
       <div className='divTexto'>
         <span className='nota'><b>Nota</b></span> Si seleccionas un <b> pasaporte</b>, no es necesario cargar el archivo del reverso
       </div>
-    
+
       <div className="document-selector">
         <h3>Selecciona el tipo de documento con el que te quieres identificar</h3>
         <div className="checkbox-group">
@@ -830,18 +949,18 @@ const MiComponente = () => {
       <div className="imagenes-container">
         {imagenes.map((imagen, index) => (
           <>
-          <div key={index} className="image-wrapper" onClick={() => handleImageClick(index)}>
-            <img src={`data:image/jpeg;base64,${imagen}`} alt={`Cargado por el usuario ${index + 1}`} className="imagen" />
-            <span className="image-overlay">Reemplazar</span>
-            {/* <textarea className="base64-textarea" readOnly value={imagen}></textarea> */}
-          </div> <br></br></>
+            <div key={index} className="image-wrapper" onClick={() => handleImageClick(index)}>
+              <img src={`data:image/jpeg;base64,${imagen}`} alt={`Cargado por el usuario ${index + 1}`} className="imagen" />
+              <span className="image-overlay">Reemplazar</span>
+              {/* <textarea className="base64-textarea" readOnly value={imagen}></textarea> */}
+            </div> <br></br><br></br></>
         ))}
         {
-          <div className='textoDiv'>            
+          <div className='textoDiv'>
             {carga}
-            { status == true ? 
+            {status == true ?
               <img
-                src="https://codigofuente.io/wp-content/uploads/2018/09/progress.gif"              
+                src="https://codigofuente.io/wp-content/uploads/2018/09/progress.gif"
                 alt="loading"
                 style={{ width: '80px', height: '80px', marginRight: '10px' }}
               /> : ""
@@ -851,18 +970,18 @@ const MiComponente = () => {
       </div>
       <br></br><br></br><br></br>
       {selectedDocument == 'Pasaporte' ?
-      <button className="custom-file-upload" onClick={imagenes.length == 3 ? validarIdentidad : handleButtonClick}>
-        {getButtonText() + " "}
-        {imagenes.length <= 1 ? <FontAwesomeIcon icon={faAddressCard} /> : <FontAwesomeIcon icon={faFaceGrinWide} />}        
-      </button> :
-      
-      <button className="custom-file-upload" onClick={imagenes.length == 4 ? validarIdentidad : handleButtonClick}>
-        {getButtonText() + " "}
-        {imagenes.length <= 1 ? <FontAwesomeIcon icon={faAddressCard} /> : <FontAwesomeIcon icon={faFaceGrinWide} />}        
-      </button>
-      
+        <button className="custom-file-upload" onClick={imagenes.length == 3 ? validarIdentidad : handleButtonClick}>
+          {getButtonText() + " "}
+          {imagenes.length <= 1 ? <FontAwesomeIcon icon={faAddressCard} /> : <FontAwesomeIcon icon={faFaceGrinWide} />}
+        </button> :
+
+        <button className="custom-file-upload" onClick={imagenes.length == 4 ? validarIdentidad : handleButtonClick}>
+          {getButtonText() + " "}
+          {imagenes.length <= 1 ? <FontAwesomeIcon icon={faAddressCard} /> : <FontAwesomeIcon icon={faFaceGrinWide} />}
+        </button>
+
       }
-      
+
     </div>
   );
 };
