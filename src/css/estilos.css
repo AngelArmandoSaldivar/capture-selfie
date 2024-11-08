@@ -1,155 +1,41 @@
-/* MiComponente.css */
-.contenedor-imagen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;        
-  }
-  .nota {
-    color: red;
-  }
-  .divTexto {
-    font-size: 14pt;
-    text-align: left !important;
-    width: 100%;
-    padding-left: 15px;
-    padding-top: 15px;
-    background-color: rgb(233, 233, 233);
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-  }
-  .custom-file-upload {
-    display: inline-block;
-    padding: 10px 20px;
-    cursor: pointer;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .custom-file-upload:hover {
-    background-color: #0056b3;
-  }
-  
-  .custom-file-upload:active {
-    background-color: #004085;
-  }
-  
-  .imagenes-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .image-wrapper {
-    box-shadow: 12px 20px 20px black;
-    position: relative;
-    display: inline-block;
-    cursor: pointer; /* Cambia el cursor a una manita */
-  }
-  
-  .imagen {
-    width: 300px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .image-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    border-radius: 8px;
-    transition: opacity 0.3s;
-  }
-  
-  .image-wrapper:hover .image-overlay {
-    opacity: 1;
+@media (max-width: 768px) {
+  .reactCrop .ReactCrop__crop-selection {
+    border: 2px solid #00bfff;
+    box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.5);
   }
 
-  .textoDiv {
-    margin-top: 300px;
-    position: absolute;
-    font-size: 18pt;
+  .reactCrop .ReactCrop__drag-handle {
+    width: 15px;
+    height: 15px;
   }
-
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #fbfbfb; /* Color de fondo similar a bg-primary */
-    color: rgb(0, 0, 0);
-    padding: 1rem;
-  }
-  
-  .logo {
-    position: absolute;
-    left: 1rem; /* Espacio a la izquierda del contenedor */
-    width: 180px;
-    height: 60px;
-  }
-  
-  .title {
-    margin: 0;
-    text-align: center;
-    flex-grow: 1;
-  }
-  
-  .error {
-    color: red;
-    margin-top: -15px;
-    margin-bottom: 10px;
-  }
+}
 
 
-  .document-selector {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: Arial, sans-serif;
-  }
-  
-  .document-selector h3 {
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .checkbox-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .checkbox-group label {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    color: #555;
-  }
-  
-  .checkbox-group input {
-    margin-right: 10px;
-  }
-  
-  .selected-document {
-    margin-top: 20px;
-    font-size: 18px;
-    color: #007BFF;
-  }
+
+.reactCrop {
+  position: relative;
+}
+
+.reactCrop .ReactCrop__crop-selection {
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6); /* Fondo oscuro fuera del área de recorte */
+  border: 2px solid #00bfff; /* Borde claro para resaltar */
+  transition: box-shadow 0.2s, border 0.2s;
+}
+
+.reactCrop .ReactCrop__drag-handle {
+  background-color: #fff;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #00bfff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.reactCrop .ReactCrop__drag-handle:hover {
+  transform: scale(1.2); /* Aumenta el tamaño al pasar el ratón */
+}
+
+.App {
+  width: 200%;
+}

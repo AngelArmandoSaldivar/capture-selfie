@@ -1,26 +1,15 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import ReactCrop from 'react-image-crop';
 import Webcam from 'react-webcam';
-
 import 'react-image-crop/dist/ReactCrop.css';
-
 import 'react-image-crop/dist/ReactCrop.css';
-import { v4 as uuidv4 } from 'uuid';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import Avatar from '@mui/material/Avatar';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { styled } from '@mui/material/styles';
 import CameraIcon from '@mui/icons-material/Camera';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';//Siguiente
-import ContentCutIcon from '@mui/icons-material/ContentCut'; //Tijeras
-import ReplayIcon from '@mui/icons-material/Replay'; //Volver
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';//Check Continuar
+import ContentCutIcon from '@mui/icons-material/ContentCut';
+import ReplayIcon from '@mui/icons-material/Replay';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ovalImage from '../img/contorno1.png';
+import '../css/estilos.css';
 
 const ImageCropper = () => {
 
@@ -33,20 +22,17 @@ const ImageCropper = () => {
   const [show4, setShow4] = useState(false);
   const [dataSelfie, setDataSelfie] = useState([]);
   const [selfieCrop, setSelfieCrop] = useState({ unit: '%', x: 27, y: 10, width: 50, height: 80, aspect: 3 / 4 });
-  const [crop, setCrop] = useState({ unit: '%', x: 20, y: 30, width: 75, height: 40, aspect: 3 / 2 });  const [croppedImage, setCroppedImage] = useState('null');
+  const [crop, setCrop] = useState({ unit: '%', x: 20, y: 30, width: 75, height: 40, aspect: 3 / 2 });  
+  const [croppedImage, setCroppedImage] = useState('null');
   const [showOverlay, setShowOverlay] = useState(true);
   const [src, setSrc] = useState(null);
   const [cropWidth, setCropWidth] = useState('');
   const [cropHeight, setCropHeight] = useState('');
   const [cropX, setCropX] = useState('');
   const [cropY, setCropY] = useState('');
-  const [token, setToken] = useState(null);
   const [carga, setCarga] = useState('');
-
-  //VARIABLES DE ENTORNO
-  const clientId = process.env.CLIENT_ID;
-  const clientSecret = process.env.CLIENT_SECRET;
-
+  const [imagenes, setImagenes] = useState([]);
+  const [status, setStatus] = useState(false);
 
   const onSelectFile = useCallback((e) => {
     if (webcamRef.current.getScreenshot()) {
@@ -137,7 +123,6 @@ const ImageCropper = () => {
     });
   };
 
-
   var ocultarPasoUno = () => {
     setShow(!show);
     setShow2(!show2);
@@ -172,10 +157,6 @@ const ImageCropper = () => {
 
   var pruebaVida = async (dataSelfie) => {
 
-    //**
-    //**
-    //Verificador de Documentos (Prueba de vida).
-
     var ineBack = dataSelfie[0].replace(new RegExp("data:image/jpeg;base64,", "gi"), "");
     console.log("INE: "+ ineBack);
     var ineFront = dataSelfie[1].replace(new RegExp("data:image/jpeg;base64,", "gi"), "");
@@ -195,28 +176,123 @@ const ImageCropper = () => {
       headers: myHeaders,
       body: raw,
       redirect: "follow"
-    };
-
-    console.log("FOTOS: " + raw);
+    };  
 
     setCarga("Verificación facial en curso \n Espera un momento...")    
     //fetch("localhost:5000/app/verificacion", requestOptions)
 
-    fetch("https://server-capture-selfie-d4c65bd43858.herokuapp.com/app/verificacion", requestOptions)
+    fetch("http://localhost:5000/app/verificacion", requestOptions)
     .then((response) => response.text())
     .then((result) => {
-      console.log("RESULT: " + result);
-      if(result != 'El customer fue registrado') {
-        setCarga("No se pudo verificar tu identidad 🙁")
-      } else {
-        setCarga("Verificación de identidad exitosa 🙂")
-      }
-    })
-    .catch((error) => console.error(error));
+      
+      localStorage.setItem("uuid", result);
+      var uuidLocal = localStorage.getItem("uuid");
+    
+        const myHeaders2 = new Headers();
+        myHeaders2.append("Content-Type", "application/json");
 
+        const RawUuid = JSON.stringify({
+          "uuid": uuidLocal
+        });
+
+        const requestOptionsCus = {
+          method: "POST",
+          headers: myHeaders2,
+          body: RawUuid,
+          redirect: "follow"
+        };
+  
+        if(result) {
+
+          async function waitForUuid() {
+            let uuid = null;              
+            var contador = 1;
+
+            //VERIFICACIÓN SI EXISTE EL CLIENTE Y DESPUES LO REGISTRA
+            while (!uuid) {
+              contador ++;                 
+              try {
+                
+                const response = await fetch("http://127.0.0.1:5000/app/getCustomer", requestOptionsCus);
+                //const response = await fetch("https://biometrico-netsuite-363a74b9153d.herokuapp.com/app/getCustomer", requestOptionsCus);
+                const result2 = await response.text();
+                console.log("##########################");
+                console.log("RESULT: " + JSON.parse(result2).identifier);
+                console.log("##########################");
+                if(JSON.parse(result2).identifier) {
+
+                  console.log("################ ENTRASTE ####################");
+
+                  const rawCus = JSON.stringify({
+                    client_body: result2,
+                    comprobante: imagenes[3],
+                    ineFront: imagenes[0],
+                    ineBack: imagenes[1],
+                    selfie: imagenes[2]
+                  });
+      
+                  const requestCusRegister = {
+                    method: "POST",
+                    headers: myHeaders,
+                    body: rawCus,
+                    redirect: "follow"
+                  };                        
+
+                  fetch("http://127.0.0.1:5000/app/verificacion", requestCusRegister)
+                  //fetch("https://biometrico-netsuite-363a74b9153d.herokuapp.com/app/verificacion", requestCusRegister)
+                  .then((response) => response.text())
+                  .then((resultCus) => {
+                    
+                      console.log("IDENTIFIER: " + JSON.parse(result2).identifier);
+                      
+                      if(JSON.parse(result2).identifier != null) {
+
+                          localStorage.removeItem("uuid");
+                          setStatus(false);
+                          setCarga(resultCus)
+                      }
+                      console.log("RESP: " + resultCus);
+                      uuid = JSON.parse(result2).identifier;
+                  })
+                  .catch(err => {
+                    console.log("ERROR: " + err);
+                  })
+                  return JSON.parse(result2).identifier;
+                } else {
+                  console.log("UUID: " + result2.uuid);
+                  console.log("Entraste no existe");
+                  await new Promise(resolve => setTimeout(resolve, 2000));
+                }
+
+              } catch (error) {
+                console.error('Error al hacer la solicitud a la API:', error.message);
+                setCarga('Error al hacer la solicitud.');
+                setStatus(false);
+                await new Promise(resolve => setTimeout(resolve, 2000)); // Espera 1 segundo antes de la próxima verificación
+              }
+            }                
+            return uuid;
+          }
+
+          waitForUuid().then(uuid => {
+            if(uuid != null) {
+              console.log("Entraste uuid: " + uuid);
+            } else {
+              console.log("AUN CARGANDO: " + uuid);
+            }
+
+          }).catch(err => {
+            setCarga(err);
+            setStatus(false);
+          });
+
+        }
+    
+    })
   }
 
   const estilos = {
+    
     contenedor: {
       width: '100%',
       border: '1px solid black',
@@ -427,7 +503,42 @@ const ImageCropper = () => {
               onChange={(newCrop) => dataSelfie.length === 2 ? setSelfieCrop(newCrop) : setCrop(newCrop)}
               onComplete={onCropComplete}
               style={{ maxWidth: '100%', maxHeight: '100%' }}
+              renderSelectionAddon={() => (
+               
+                <style>
+          {`
+            /* Estilo para los mangos de arrastre en los bordes */
+            .ReactCrop__drag-handle {
+              background-color: #fff;
+              width: 10px;
+              height: 10px;
+              border-radius: 50%;
+              border: 2px solid #00bfff;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+              transition: transform 0.2s;
+              cursor: pointer;
+            }
 
+            .ReactCrop__drag-handle--nw, .ReactCrop__drag-handle--ne,
+            .ReactCrop__drag-handle--sw, .ReactCrop__drag-handle--se {
+              width: 12px;
+              height: 12px;
+            }
+
+            /* Mangos de arrastre en los lados */
+            .ReactCrop__drag-handle--n, .ReactCrop__drag-handle--s,
+            .ReactCrop__drag-handle--e, .ReactCrop__drag-handle--w {
+              width: 10px;
+              height: 10px;
+            }
+
+            .ReactCrop__drag-handle:hover {
+              transform: scale(1.3);
+            }
+          `}
+        </style>
+
+              )}
               />
           </div>
           <center>
